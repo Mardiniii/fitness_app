@@ -90,6 +90,19 @@ es:
           measure_value_missing: "falta el valor para el tipo de medida (%{kind})"
 
   enums:
+    muscle_region:
+      tren_inferior: Tren inferior
+      tren_superior: Tren superior
+      full_body: Full body
+    movement_structure:
+      aislado: Aislado
+      compuesto: Compuesto
+    training_quality:
+      aceleracion: Aceleración
+      fuerza: Fuerza
+    training_purpose:
+      movilidad: Movilidad
+      fortaleza: Fortaleza
     execution_mode:
       straight_sets: Series por ejercicio
       circuit: En circuito
@@ -112,6 +125,7 @@ es:
       completed: Completada
       skipped: Omitida
   nav:
+    library: Biblioteca
     sign_out: Cerrar sesión
   dashboard:
     last_check_in: Último reporte
@@ -126,3 +140,63 @@ es:
     no_clients: Aún no tienes clientes.
     no_programs: Aún no has creado programas.
     no_program: No tienes un programa asignado todavía.
+  errors:
+    practitioners_only: Esta sección es solo para profesionales.
+  exercises:
+    index:
+      title: Biblioteca de ejercicios
+      subtitle: "%{total} movimientos, extraídos de los planes reales."
+      new: Nuevo ejercicio
+      restore: Restaurar
+      view_archived: "Archivados (%{count})"
+      back_to_library: Volver a la biblioteca
+      archive_note: Estos ejercicios están archivados. Siguen disponibles en el historial y en los planes que ya los usan.
+      showing: "%{count} resultados"
+      empty: No hay ejercicios que coincidan con estos filtros.
+      confirm: Confirmar
+      confirmed: Confirmado
+      pending: Sin confirmar
+      pending_hint: Clasificación pendiente de confirmar
+      queue_title: Pendiente de revisión
+      queue_body: "%{count} ejercicios fueron clasificados a partir de tus planes en PDF. Revisa que los ejes sean correctos y confírmalos."
+      queue_review: Revisar
+      queue_confirm_all: Confirmar todo
+      queue_confirm_all_warn: ¿Confirmar la clasificación de todos los ejercicios visibles?
+    filters:
+      search_placeholder: Buscar ejercicio…
+      apply: Filtrar
+      all_regions: Todo el cuerpo
+      all_structures: Aislado y compuesto
+      all_qualities: Toda cualidad
+      all_purposes: Todo propósito
+      all_states: Todos
+      confirmed_yes: Confirmados
+      confirmed_no: Sin confirmar
+    form:
+      taxonomy: Clasificación
+      taxonomy_hint: Los cuatro ejes que usas para clasificar tus movimientos.
+      not_applicable: No aplica
+      technique_placeholder: "Ej: Controla la bajada"
+      technique_hint: Se muestra al cliente en el momento de ejecutar la serie.
+      save: Guardar
+      cancel: Cancelar
+      delete: Eliminar
+      archive: Archivar
+      delete_warn: "¿Eliminar este ejercicio? No está en uso, así que se borra definitivamente."
+      archive_warn: "¿Archivar este ejercicio? Se oculta de la biblioteca pero se conserva el historial."
+      in_use: "En uso en %{count} lugares, por eso se archiva en vez de eliminarse."
+      discard_warn: ¿Archivar este ejercicio? No se elimina el historial.
+    new:
+      title: Nuevo ejercicio
+    create:
+      created: "%{name} creado."
+    update:
+      updated: "%{name} actualizado."
+    restore:
+      restored: "%{name} restaurado."
+    destroy:
+      deleted: "%{name} eliminado."
+      archived: "%{name} archivado (en uso en %{count} lugares)."
+    confirm_all:
+      confirmed: "%{count} ejercicios confirmados."
+

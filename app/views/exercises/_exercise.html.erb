@@ -1,0 +1,42 @@
+<li class="flex items-start justify-between gap-4 border-b border-line py-3 last:border-b-0">
+  <div class="min-w-0">
+    <div class="flex items-center gap-2">
+      <%= link_to exercise.name_es, edit_exercise_path(exercise),
+            class: "text-[14.5px] font-bold tracking-[-0.01em] hover:text-now" %>
+      <% unless exercise.taxonomy_confirmed? %>
+        <span class="inline-block size-1.5 rounded-full bg-now"
+              title="<%= t('exercises.index.pending_hint') %>"></span>
+      <% end %>
+    </div>
+
+    <% if exercise.technique_notes.present? %>
+      <p class="cue mt-0.5 truncate"><%= exercise.technique_notes %></p>
+    <% end %>
+
+    <div class="mt-1.5 flex flex-wrap gap-1">
+      <%= axis_chip("muscle_region", exercise.muscle_region) %>
+      <%= axis_chip("movement_structure", exercise.movement_structure) %>
+      <%= axis_chip("training_quality", exercise.training_quality,
+                    tone: exercise.training_quality_aceleracion? ? :now : :ink) %>
+      <%= axis_chip("training_purpose", exercise.training_purpose,
+                    tone: exercise.training_purpose_movilidad? ? :done : :ink) %>
+      <% if exercise.default_equipment_item %>
+        <span class="text-[10px] font-semibold text-ink-faint">
+          · <%= exercise.default_equipment_item.display_name %>
+        </span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="shrink-0">
+    <% if exercise.discarded? %>
+      <%= button_to t("exercises.index.restore"), restore_exercise_path(exercise),
+            method: :patch, class: "btn btn-quiet btn-sm tap" %>
+    <% elsif exercise.taxonomy_confirmed? %>
+      <span class="stat-k text-done"><%= t("exercises.index.confirmed") %></span>
+    <% else %>
+      <%= button_to t("exercises.index.confirm"), confirm_exercise_path(exercise),
+            method: :patch, class: "btn btn-done btn-sm tap" %>
+    <% end %>
+  </div>
+</li>

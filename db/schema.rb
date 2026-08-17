@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_17_161500) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_17_180200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -22,17 +22,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_161500) do
   create_enum "assignment_status", ["active", "completed", "paused", "abandoned"]
   create_enum "distance_unit", ["m", "km", "mi"]
   create_enum "equipment_kind", ["dumbbell", "barbell", "kettlebell", "band", "machine", "bodyweight", "cardio", "accessory", "other"]
-  create_enum "execution_mode", ["straight_sets", "circuit", "interval", "paired"]
+  create_enum "execution_mode", ["straight_sets", "circuit", "interval", "paired", "biseries"]
   create_enum "import_source_type", ["paste", "pdf"]
   create_enum "import_status", ["pending", "parsed", "review", "committed", "failed"]
   create_enum "load_kind", ["none", "bodyweight", "external", "band", "machine"]
   create_enum "load_unit", ["lb", "kg"]
   create_enum "measure_kind", ["reps", "time", "distance", "calories"]
+  create_enum "movement_structure", ["aislado", "compuesto"]
+  create_enum "muscle_region", ["tren_inferior", "tren_superior", "full_body"]
   create_enum "practitioner_specialty", ["trainer", "nutritionist"]
   create_enum "program_version_status", ["draft", "published", "archived"]
   create_enum "relationship_status", ["invited", "active", "paused", "ended"]
   create_enum "relationship_type", ["trainer", "nutritionist"]
   create_enum "session_status", ["pending", "in_progress", "completed", "skipped"]
+  create_enum "training_purpose", ["movilidad", "fortaleza"]
+  create_enum "training_quality", ["aceleracion", "fuerza"]
   create_enum "unit_system", ["metric", "imperial"]
   create_enum "user_role", ["practitioner", "client", "admin"]
 
@@ -129,8 +133,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_161500) do
     t.string "slug", null: false
     t.string "search_name", default: "", null: false
     t.string "muscle_group"
-    t.string "secondary_muscles", default: [], array: true
-    t.string "movement_pattern"
     t.enum "default_measure_kind", default: "reps", null: false, enum_type: "measure_kind"
     t.bigint "default_equipment_item_id"
     t.text "technique_notes"
@@ -139,8 +141,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_161500) do
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.enum "muscle_region", enum_type: "muscle_region"
+    t.enum "movement_structure", enum_type: "movement_structure"
+    t.enum "training_quality", enum_type: "training_quality"
+    t.enum "training_purpose", enum_type: "training_purpose"
+    t.boolean "taxonomy_confirmed", default: false, null: false
     t.index ["default_equipment_item_id"], name: "index_exercises_on_default_equipment_item_id"
     t.index ["muscle_group"], name: "index_exercises_on_muscle_group"
+    t.index ["muscle_region", "movement_structure"], name: "index_exercises_on_muscle_region_and_movement_structure"
+    t.index ["muscle_region"], name: "index_exercises_on_muscle_region"
     t.index ["practitioner_id"], name: "index_exercises_on_practitioner_id"
     t.index ["search_name"], name: "idx_exercises_search_name_trgm", opclass: :gin_trgm_ops, using: :gin
     t.index ["search_name"], name: "index_exercises_on_search_name"
@@ -247,6 +256,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_161500) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "focus"
     t.index ["parent_block_id"], name: "index_program_blocks_on_parent_block_id"
     t.index ["program_day_id", "position"], name: "index_program_blocks_on_program_day_id_and_position"
     t.index ["program_day_id"], name: "index_program_blocks_on_program_day_id"

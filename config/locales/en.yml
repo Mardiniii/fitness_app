@@ -75,6 +75,19 @@ en:
           measure_value_missing: "is missing a value for measure kind (%{kind})"
 
   enums:
+    muscle_region:
+      tren_inferior: Lower body
+      tren_superior: Upper body
+      full_body: Full body
+    movement_structure:
+      aislado: Isolated
+      compuesto: Compound
+    training_quality:
+      aceleracion: Acceleration
+      fuerza: Strength
+    training_purpose:
+      movilidad: Mobility
+      fortaleza: Strength work
     execution_mode:
       straight_sets: Straight sets
       circuit: Circuit
@@ -97,6 +110,7 @@ en:
       completed: Completed
       skipped: Skipped
   nav:
+    library: Library
     sign_out: Sign out
   dashboard:
     last_check_in: Last check-in
@@ -111,3 +125,63 @@ en:
     no_clients: No clients yet.
     no_programs: No programs created yet.
     no_program: You have no assigned program yet.
+  errors:
+    practitioners_only: This section is for practitioners only.
+  exercises:
+    index:
+      title: Exercise library
+      subtitle: "%{total} movements, extracted from the real plans."
+      new: New exercise
+      restore: Restore
+      view_archived: "Archived (%{count})"
+      back_to_library: Back to library
+      archive_note: These exercises are archived. They remain in history and in any plan already using them.
+      showing: "%{count} results"
+      empty: No exercises match these filters.
+      confirm: Confirm
+      confirmed: Confirmed
+      pending: Unconfirmed
+      pending_hint: Classification awaiting confirmation
+      queue_title: Awaiting review
+      queue_body: "%{count} exercises were classified from your plan PDFs. Check the axes are right and confirm them."
+      queue_review: Review
+      queue_confirm_all: Confirm all
+      queue_confirm_all_warn: Confirm the classification for every visible exercise?
+    filters:
+      search_placeholder: Search exercise…
+      apply: Filter
+      all_regions: Whole body
+      all_structures: Isolated and compound
+      all_qualities: Any quality
+      all_purposes: Any purpose
+      all_states: All
+      confirmed_yes: Confirmed
+      confirmed_no: Unconfirmed
+    form:
+      taxonomy: Classification
+      taxonomy_hint: The four axes you use to classify your movements.
+      not_applicable: Not applicable
+      technique_placeholder: "e.g. Control the descent"
+      technique_hint: Shown to the client at the moment they perform the set.
+      save: Save
+      cancel: Cancel
+      delete: Delete
+      archive: Archive
+      delete_warn: "Delete this exercise? It is not in use, so it will be removed permanently."
+      archive_warn: "Archive this exercise? It is hidden from the library but history is preserved."
+      in_use: "Referenced in %{count} places, so it is archived rather than deleted."
+      discard_warn: Archive this exercise? History is preserved.
+    new:
+      title: New exercise
+    create:
+      created: "%{name} created."
+    update:
+      updated: "%{name} updated."
+    restore:
+      restored: "%{name} restored."
+    destroy:
+      deleted: "%{name} deleted."
+      archived: "%{name} archived (in use in %{count} places)."
+    confirm_all:
+      confirmed: "%{count} exercises confirmed."
+

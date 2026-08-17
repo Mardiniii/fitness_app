@@ -1,0 +1,10 @@
+<% content_for :title, @exercise.name_es %>
+<div class="flex items-center gap-3">
+  <h1 class="display text-[26px]"><%= @exercise.name_es %></h1>
+  <% if @exercise.taxonomy_confirmed? %>
+    <span class="stat-k text-done"><%= t("exercises.index.confirmed") %></span>
+  <% else %>
+    <span class="stat-k text-now"><%= t("exercises.index.pending") %></span>
+  <% end %>
+</div>
+<%= render "form", exercise: @exercise %>

@@ -35,6 +35,10 @@
           <% end %>
 
           <div class="flex items-center gap-3">
+            <% if current_user.practitioner? %>
+              <%= link_to t("nav.library"), exercises_path,
+                    class: "u-label text-ink-soft hover:text-now" %>
+            <% end %>
             <span class="hidden u-meta sm:inline"><%= current_user.display_name %></span>
             <%= button_to t("nav.sign_out"), destroy_user_session_path, method: :delete,
                   class: "btn btn-quiet btn-sm" %>

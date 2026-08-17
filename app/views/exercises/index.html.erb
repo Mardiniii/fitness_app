@@ -1,0 +1,52 @@
+<% content_for :title, t(".title") %>
+
+<div class="flex flex-wrap items-start justify-between gap-3">
+  <div>
+    <h1 class="display text-[28px]"><%= t(".title") %></h1>
+    <p class="cue mt-1"><%= t(".subtitle", total: @total_count) %></p>
+  </div>
+  <div class="flex gap-2">
+    <% if @filters[:discarded] == "true" %>
+      <%= link_to t(".back_to_library"), exercises_path, class: "btn btn-quiet btn-sm tap" %>
+    <% elsif @discarded_count.positive? %>
+      <%= link_to t(".view_archived", count: @discarded_count),
+            exercises_path(discarded: "true"), class: "btn btn-quiet btn-sm tap" %>
+    <% end %>
+    <%= link_to t(".new"), new_exercise_path, class: "btn btn-ink btn-sm tap" %>
+  </div>
+</div>
+
+<% if @filters[:discarded] == "true" %>
+  <p class="cue mt-5"><%= t(".archive_note") %></p>
+<% end %>
+
+<% if @pending_count.positive? && @filters[:discarded] != "true" %>
+  <div class="mt-5 rounded-brand border-2 border-now p-4">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <div class="u-label text-now"><%= t(".queue_title") %></div>
+        <p class="cue mt-1 max-w-[62ch]"><%= t(".queue_body", count: @pending_count) %></p>
+      </div>
+      <div class="flex gap-2">
+        <%= link_to t(".queue_review"), exercises_path(confirmed: "false"),
+              class: "btn btn-quiet btn-sm tap" %>
+        <%= button_to t(".queue_confirm_all"), confirm_all_exercises_path(@filters.compact_blank),
+              method: :patch, class: "btn btn-now btn-sm tap",
+              form: { data: { turbo_confirm: t(".queue_confirm_all_warn") } } %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="mt-6"><%= render "filters" %></div>
+
+<%= turbo_frame_tag "exercise_list", class: "block" do %>
+  <% if @exercises.any? %>
+    <p class="stat-k mt-6"><%= t(".showing", count: @exercises.size) %></p>
+    <ul class="card mt-2 px-4">
+      <%= render partial: "exercise", collection: @exercises %>
+    </ul>
+  <% else %>
+    <p class="cue mt-8"><%= t(".empty") %></p>
+  <% end %>
+<% end %>

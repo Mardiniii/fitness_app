@@ -6,6 +6,9 @@
 
 DEFAULT_PASSWORD = ENV.fetch("SEED_PASSWORD", "fitfusion123")
 
+load Rails.root.join("db/seeds/equipment.rb")
+load Rails.root.join("db/seeds/exercises.rb")
+
 practitioner = User.find_or_initialize_by(email: ENV.fetch("SEED_TRAINER_EMAIL", "cristian@fitfusion.local"))
 practitioner.assign_attributes(
   name: "Cristian Franco",

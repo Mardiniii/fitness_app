@@ -4,6 +4,11 @@ Rails.application.routes.draw do
   # Practitioner side
   resource :dashboard, only: [ :show ]
 
+  resources :exercises, except: [ :show ] do
+    member     { patch :confirm; patch :restore }
+    collection { patch :confirm_all }
+  end
+
   # Liveness probe for load balancers and uptime monitors
   get "up" => "rails/health#show", as: :rails_health_check
 

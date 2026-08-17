@@ -1,0 +1,30 @@
+<%= form_with url: exercises_path, method: :get, data: { turbo_frame: "exercise_list" },
+              class: "space-y-3" do |f| %>
+  <div class="flex gap-2">
+    <%= f.search_field :q, value: @filters[:q], placeholder: t(".search_placeholder"),
+          class: "field flex-1", autocomplete: "off" %>
+    <%= f.submit t(".apply"), class: "btn btn-ink btn-sm" %>
+  </div>
+
+  <div class="grid grid-cols-2 gap-2 sm:grid-cols-5">
+    <%= f.select :region, options_for_select(
+          Exercise.muscle_regions.keys.map { |v| [ enum_label("muscle_region", v), v ] },
+          @filters[:region]), { include_blank: t(".all_regions") }, class: "field text-[13px]" %>
+
+    <%= f.select :structure, options_for_select(
+          Exercise.movement_structures.keys.map { |v| [ enum_label("movement_structure", v), v ] },
+          @filters[:structure]), { include_blank: t(".all_structures") }, class: "field text-[13px]" %>
+
+    <%= f.select :quality, options_for_select(
+          Exercise.training_qualities.keys.map { |v| [ enum_label("training_quality", v), v ] },
+          @filters[:quality]), { include_blank: t(".all_qualities") }, class: "field text-[13px]" %>
+
+    <%= f.select :purpose, options_for_select(
+          Exercise.training_purposes.keys.map { |v| [ enum_label("training_purpose", v), v ] },
+          @filters[:purpose]), { include_blank: t(".all_purposes") }, class: "field text-[13px]" %>
+
+    <%= f.select :confirmed, options_for_select(
+          [ [ t(".confirmed_yes"), "true" ], [ t(".confirmed_no"), "false" ] ],
+          @filters[:confirmed]), { include_blank: t(".all_states") }, class: "field text-[13px]" %>
+  </div>
+<% end %>
