@@ -121,6 +121,18 @@
   .chip-done { @apply border-done bg-done text-white; }
   .chip-now  { @apply border-now bg-now text-white; }
   .chip-todo { @apply border-line text-ink-faint; }
+  /* The set you are currently on. Applied by JS, so it layers over whatever
+     done/todo state the server rendered rather than replacing it. */
+  .chip-open { @apply border-ink text-ink ring-2 ring-ink/25; }
+
+  /* A set you are not on: one line, still readable, still tappable. */
+  .set-line {
+    @apply flex w-full items-baseline justify-between gap-3 rounded-brand border
+           border-line bg-surface-alt px-3 py-2.5 text-left;
+  }
+  .set-line-k { @apply text-[10.5px] font-extrabold uppercase tracking-[0.1em] text-ink-soft; }
+  .set-line-v { @apply text-[13.5px] font-bold tabular-nums; }
+  .set-line-done { @apply border-done/40; }
 
   /* ---------- forms ---------- */
   .field {

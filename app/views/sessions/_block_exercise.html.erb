@@ -1,0 +1,107 @@
+<%# One exercise, filling the screen. Every exercise in the day is rendered and
+    all but one hidden, so paging between them costs no request -- which is the
+    whole point when the gym has no signal.
+    
+    Which one is open is decided on the SERVER. The runner controller is
+    enhancement: it re-opens whatever the URL fragment points at and handles
+    paging, but if it never boots the client still sees the right exercise and
+    every set form still posts. A gym screen that needs JS to show anything is
+    a gym screen that shows nothing.
+    Locals: be (BlockExercise), be_counter (index within the collection) %>
+<%
+  segments_by_set = be.sets_by_number
+  cue = be.technique_notes.presence || be.exercise.technique_notes.presence
+
+  # A set counts as done once every one of its segments is logged, so a drop
+  # set does not go green on the first half.
+  set_states = segments_by_set.map do |segments|
+    segments.all? { |ps| @logs[[ be.id, ps.set_number, ps.segment_number ]].present? }
+  end
+  previous = @previous[be.exercise_id]
+
+  # The set you land on: whichever ?set= asked for (only on the exercise that is
+  # actually open), else the first with nothing logged, else the last so that
+  # correcting a number does not bounce you elsewhere.
+  requested = (@open_set_number if be_counter == @open_index)
+  from_param = requested && segments_by_set.index { |segs| segs.first.set_number == requested }
+  open_set = from_param || set_states.index(false) || (set_states.size - 1)
+  open_key = segments_by_set.dig(open_set, 0)&.set_number
+%>
+
+<section data-runner-target="panel" id="ex-<%= be.id %>"
+         <%= "hidden" if be_counter != @open_index %>
+         data-controller="set-switch"
+         data-set-switch-open-value="<%= open_key %>"
+         aria-label="<%= be.exercise.name_es %>">
+
+  <%= render "block", pblock: be.program_block %>
+
+  <h2 class="display mt-3 text-[26px]"><%= be.exercise.name_es %></h2>
+
+  <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+    <% if be.per_side? %>
+      <span class="u-label text-ink-soft"><%= t("sessions.exercise.per_side") %></span>
+    <% end %>
+    <% if be.exercise.video? %>
+      <%= link_to t("sessions.exercise.demo"), be.exercise.reference_url,
+            target: "_blank", rel: "noopener",
+            class: "u-label text-ink-soft underline decoration-2 underline-offset-4 hover:text-now" %>
+    <% end %>
+  </div>
+
+  <% if cue.present? %>
+    <p class="cue mt-1"><%= cue %></p>
+  <% end %>
+
+  <% if previous.present? %>
+    <div class="panel-done mt-3">
+      <div class="u-label text-done"><%= t("sessions.set.last_time") %></div>
+      <div class="mt-0.5 text-[16px] font-extrabold tnum"><%= previous.summary %></div>
+    </div>
+  <% end %>
+
+  <% if segments_by_set.any? %>
+    <%# Jump between sets. Done state is server truth; the open one gets a ring. %>
+    <div class="mt-3 flex gap-1.5">
+      <% segments_by_set.each_with_index do |segments, i| %>
+        <% n = segments.first.set_number %>
+        <%= link_to session_path(@session, ex: be_counter, set: n, anchor: "ex-#{be.id}"),
+              data: { set_switch_target: "chip", key: n,
+                      action: "set-switch#open", set_switch_key_param: n },
+              class: "chip tap #{set_states[i] ? "chip-done" : "chip-todo"} #{"chip-open" if i == open_set}" do %>
+          <%= n %><%= " ✓" if set_states[i] %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="mt-3 space-y-2">
+      <% segments_by_set.each_with_index do |segments, i| %>
+        <% n = segments.first.set_number %>
+        <div data-set-switch-target="set" data-key="<%= n %>"
+             data-logged="<%= set_states[i] %>">
+
+          <%# Collapsed: one readable line. Shown for every set you are not on. %>
+          <%= link_to session_path(@session, ex: be_counter, set: n, anchor: "ex-#{be.id}"),
+                data: { collapsed: true, action: "set-switch#open", set_switch_key_param: n },
+                hidden: (i == open_set),
+                class: "set-line tap #{"set-line-done" if set_states[i]}" do %>
+            <span class="set-line-k">
+              <%= t("sessions.set.serie_n", n: n) %><%= " ✓" if set_states[i] %>
+            </span>
+            <span class="set-line-v">
+              <%= render "set_line_value", be: be, segments: segments, done: set_states[i] %>
+            </span>
+          <% end %>
+
+          <div data-expanded <%= "hidden" if i != open_set %>>
+            <% segments.each do |ps| %>
+              <%= render "set_row", be: be, ps: ps, total_sets: segments_by_set.size %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="cue mt-3"><%= t("sessions.exercise.no_sets") %></p>
+  <% end %>
+</section>

@@ -1,10 +1,14 @@
+<%# Devise's session_path/new_session_path aliases are shadowed by the
+    `resources :sessions` route helper for WORKOUT sessions -- session_path(:user)
+    resolved to /sessions/user, the show route with "user" as the id. Every Devise
+    view here uses the explicit scoped helper instead, which cannot collide. %>
 <% content_for :title, t("devise.sessions.new.sign_in") %>
 
 <div class="mx-auto max-w-sm py-6">
   <h1 class="display text-center text-[30px]">FIT<span class="text-now">FUSION</span></h1>
   <p class="u-label mt-2 text-center text-ink-soft"><%= t("devise.sessions.new.sign_in") %></p>
 
-  <%= form_for(resource, as: resource_name, url: session_path(resource_name),
+  <%= form_for(resource, as: resource_name, url: user_session_path,
                html: { class: "mt-7 space-y-4" }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
 
@@ -29,7 +33,7 @@
   <% end %>
 
   <p class="mt-5 text-center">
-    <%= link_to t("devise.shared.links.forgot_your_password"), new_password_path(resource_name),
+    <%= link_to t("devise.shared.links.forgot_your_password"), new_user_password_path,
           class: "u-label text-ink-soft underline decoration-2 underline-offset-4 hover:text-ink" %>
   </p>
 </div>

@@ -5,7 +5,7 @@
 #   "4 series por tiempo 30\"x10\"" -> interval  (work 30, rest 10)
 #   "1 serie = bloque A + bloque B" -> paired, via parent_block_id
 class ProgramBlock < ApplicationRecord
-  pg_enum :execution_mode, %w[straight_sets circuit interval paired], validate: true
+  pg_enum :execution_mode, %w[straight_sets circuit interval paired biseries], validate: true
 
   belongs_to :program_day
   belongs_to :parent_block, class_name: "ProgramBlock", optional: true,

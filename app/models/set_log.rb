@@ -21,6 +21,13 @@ class SetLog < ApplicationRecord
   }, allow_nil: true
   validate :substitution_is_acceptable
 
+  # The column defaults to gen_random_uuid() in Postgres, but Rails cannot
+  # evaluate a function default before the INSERT -- so a new record arrives at
+  # validation with client_uuid still nil and never saves. The phone supplies
+  # this key when JS is running (it is what makes a replayed offline queue
+  # idempotent); this covers the plain server-rendered path.
+  before_validation { self.client_uuid ||= SecureRandom.uuid }
+
   scope :done, -> { where(skipped: false).where.not(completed_at: nil) }
 
   # Powers the "last time" panel -- the single most valuable element on the
@@ -34,7 +41,17 @@ class SetLog < ApplicationRecord
 
   def substituted? = exercise_id != block_exercise&.exercise_id
 
+  # "10 × 50 lb · RPE 9"
+  def summary
+    parts = []
+    parts << (load_value.present? ? "#{reps_completed} × #{fmt(load_value)} #{load_unit}" : reps_completed.to_s)
+    parts << "RPE #{fmt(rpe_reported)}" if rpe_reported.present?
+    parts.compact_blank.join(" · ")
+  end
+
   private
+
+  def fmt(number) = number.to_d.to_s("F").sub(/\.0+$/, "")
 
   def substitution_is_acceptable
     return if block_exercise.blank? || exercise_id.blank?

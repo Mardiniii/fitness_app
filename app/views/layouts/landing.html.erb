@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<%# Landing-only layout. Deliberately NOT layouts/application: the public page
+    is its own design expression -- own type scale, own CSS, own <head>. It
+    must not inherit the app chrome (FIT/FUSION nav, flash region, max-w-5xl
+    main) and must not be touched by Tailwind's preflight or @theme. The only
+    stylesheet here is landing.css, and data-turbo-track makes Turbo do a full
+    reload when crossing between this document and the app's (e.g. on sign
+    out), rather than merging one design system's <head> into the other's. %>
+<html lang="es" data-en-title="FitFusion — the plan leaves the PDF">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FitFusion — el plan sale del PDF</title>
+<meta name="description" content="FitFusion es una plataforma de entrenamiento para entrenadores y sus clientes. El entrenador arma el programa serie por serie; el cliente lo ejecuta desde el celular en el gimnasio. La prescripción y la ejecución quedan separadas, para que el progreso sea real." data-en-content="FitFusion is a training platform for coaches and their clients. The coach authors the program set by set; the client runs it from a phone at the gym. Prescription and execution stay separate, so progress is honest.">
+<meta name="theme-color" content="#EFEDE9">
+<link rel="icon" href="/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="/icon.png">
+
+<%# Propshaft serves app/assets/stylesheets, so "landing" resolves to
+    app/assets/stylesheets/landing.css and is fingerprinted. It is linked
+    here and nowhere else -- see the note in layouts/application.html.erb
+    about why that layout no longer uses the :app glob. %>
+<%= stylesheet_link_tag "landing", "data-turbo-track": "reload" %>
+<script>
+/* Opt into scroll-reveal only when we can guarantee we can un-hide again.
+   Runs before first paint, so there is no flash. */
+(function () {
+  try {
+    var ok = 'IntersectionObserver' in window &&
+             !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (ok) document.documentElement.className += ' anim';
+  } catch (e) { /* leave content visible */ }
+})();
+</script>
+</head>
+<body>
+
+<%= yield %>
+
+<script>
+/* ── scroll reveal (opt-in; the head script decides) ───────────────────── */
+(function () {
+  var root = document.documentElement;
+  if (!root.className || root.className.indexOf('anim') === -1) return;
+  var items = document.querySelectorAll('.reveal');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  for (var j = 0; j < items.length; j++) io.observe(items[j]);
+})();
+
+/* ── language toggle ───────────────────────────────────────────────────────
+   Spanish is what ships in the HTML, so a visitor with JS off gets a
+   complete Spanish page. English is applied here, on demand. The original
+   Spanish is captured into a JS-side list at load, so the swap is
+   reversible without touching storage. The UI mockups are product
+   screenshots and deliberately carry no data-en — they stay in Spanish. */
+(function () {
+  var root  = document.documentElement;
+  var nodes = [];
+  var i, el, list;
+
+  list = document.querySelectorAll('[data-en]');
+  for (i = 0; i < list.length; i++) {
+    el = list[i];
+    nodes.push({ el: el, kind: 'text', es: el.textContent, en: el.getAttribute('data-en') });
+  }
+  list = document.querySelectorAll('[data-en-html]');
+  for (i = 0; i < list.length; i++) {
+    el = list[i];
+    nodes.push({ el: el, kind: 'html', es: el.innerHTML, en: el.getAttribute('data-en-html') });
+  }
+  list = document.querySelectorAll('[data-en-aria]');
+  for (i = 0; i < list.length; i++) {
+    el = list[i];
+    nodes.push({ el: el, kind: 'aria', es: el.getAttribute('aria-label'), en: el.getAttribute('data-en-aria') });
+  }
+
+  var titleEs = document.title;
+  var titleEn = root.getAttribute('data-en-title') || titleEs;
+  var meta    = document.querySelector('meta[name="description"]');
+  var descEs  = meta ? meta.getAttribute('content') : '';
+  var descEn  = meta ? (meta.getAttribute('data-en-content') || descEs) : '';
+
+  var buttons = document.querySelectorAll('.lang button');
+  var current = 'es';
+
+  function apply(lang) {
+    if (lang === current) return;
+    var n, v, k;
+    for (k = 0; k < nodes.length; k++) {
+      n = nodes[k];
+      v = (lang === 'en') ? n.en : n.es;
+      if (v === null || v === undefined) continue;
+      if (n.kind === 'text')      { n.el.textContent = v; }
+      else if (n.kind === 'html') { n.el.innerHTML = v; }
+      else                        { n.el.setAttribute('aria-label', v); }
+    }
+    document.title = (lang === 'en') ? titleEn : titleEs;
+    if (meta) meta.setAttribute('content', (lang === 'en') ? descEn : descEs);
+    root.lang = lang;
+    for (k = 0; k < buttons.length; k++) {
+      buttons[k].setAttribute('aria-pressed',
+        buttons[k].getAttribute('data-lang') === lang ? 'true' : 'false');
+    }
+    current = lang;
+  }
+
+  for (i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', function () {
+      apply(this.getAttribute('data-lang'));
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -126,12 +126,57 @@ es:
       in_progress: En progreso
       completed: Completada
       skipped: Omitida
+  sessions:
+    create:
+      no_program: Todavía no tienes un programa activo.
+      no_day: No queda ningún día por hacer en este programa.
+    complete:
+      done: Sesión completada.
+    show:
+      week_n: "Semana %{n}"
+      sets_done: "%{done} de %{total} series registradas"
+      exercise_nav: Moverse entre ejercicios
+      previous: Anterior
+      next: Siguiente
+      progress_label: "%{percent}% de las series registradas"
+      session_video: Video de la sesión
+      no_blocks: Este día todavía no tiene bloques.
+      resting: Descanso
+      skip_rest: Saltar
+      complete: Terminar sesión
+      complete_warn: "¿Terminar esta sesión? Puedes seguir editando las series después."
+      completed_at: "Completada %{at}"
+      queued_html: "%{count} series esperando enviarse. Suben solas cuando vuelva la conexión."
+    block:
+      block_n: "Bloque %{n}"
+      rounds: "%{n} rondas"
+      work: "trabajo %{n}s"
+      rest: "descanso %{n}s"
+    exercise:
+      per_side: Por lado
+      demo: Ver el movimiento
+      no_sets: Sin series prescritas para este ejercicio.
+    set:
+      serie_of: "Serie %{n} de %{total}"
+      serie_n: "Serie %{n}"
+      drop: Drop
+      last_time: La vez pasada
+      performed: Movimiento realizado
+      load: Carga
+      complete: Completar serie
+      update: Actualizar serie
+      skip: Saltar
+  set_logs:
+    create:
+      invalid: No se pudo guardar esa serie.
+      conflict: Esa serie se guardó desde otro dispositivo. Recarga para verla.
   nav:
     programs: Programas
     library: Biblioteca
     sign_out: Cerrar sesión
   dashboard:
     last_check_in: Último reporte
+    resume_session: Retomar sesión
     start_session: Empezar sesión
     streak: Racha
     sessions: Sesiones

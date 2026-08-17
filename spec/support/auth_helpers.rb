@@ -18,9 +18,17 @@ module ErrorPageHelpers
 end
 
 module AuthHelpers
-  # Devise's sign_in helper needs Warden; going through the real form keeps the
-  # specs honest about the actual auth path.
+  # Devise's sign_in helper needs Warden; going through the real endpoint keeps
+  # the specs honest about the actual auth path.
+  #
+  # The sign-out is load-bearing. Devise's require_no_authentication filter
+  # IGNORES a sign-in POST when somebody is already signed in -- it just
+  # redirects. So "sign_in_as(intruder)" inside an example that already signed
+  # in left current_user as the FIRST user, and every authorization spec built
+  # on it was quietly asserting that a client can read their own data.
   def sign_in_as(user, password: "fitfusion123")
+    delete destroy_user_session_path
+
     post user_session_path, params: {
       user: { email: user.email, password: password }
     }

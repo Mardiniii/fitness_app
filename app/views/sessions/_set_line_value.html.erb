@@ -1,0 +1,9 @@
+<%# The right-hand side of a collapsed set line: what you did, or what was
+    asked for. Locals: be, segments (PrescribedSet array), done (Boolean) %>
+<%- if done -%>
+  <%= segments.map { |ps| @logs[[ be.id, ps.set_number, ps.segment_number ]]&.summary }
+              .compact_blank.join(" → ") %>
+<%- else -%>
+  <%= segments.map { |ps| [ ps.prescription_summary, ps.load_summary ].compact_blank.join(" · ") }
+              .join(" → ") %>
+<%- end -%>

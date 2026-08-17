@@ -1,0 +1,103 @@
+<% content_for :title, @day.display_name %>
+
+<div data-controller="rest-timer offline-queue runner"
+     data-rest-timer-session-id-value="<%= @session.id %>">
+
+  <%# Queued sets, when the gym basement ate the connection mid-workout. %>
+  <div data-offline-queue-target="banner" hidden class="flash flash-alert mb-4" role="status">
+    <%= t(".queued_html", count: tag.span(0, data: { offline_queue_target: "count" }, class: "tnum")) %>
+  </div>
+
+  <header class="border-b-2 border-ink pb-4">
+    <div class="flex items-center justify-between gap-3">
+      <span class="u-label text-ink-soft">
+        <%= t(".week_n", n: @day.program_week.position) %> ·
+        <%= @day.display_name %><%= " · #{@day.focus}" if @day.focus.present? %>
+      </span>
+      <%# Which exercise you are on. Updated by the runner as you page. %>
+      <span data-runner-target="counter"
+            class="u-label rounded-brand bg-ink px-2 py-1 text-white tnum">
+        <%= @open_index + 1 %> / <%= @exercises.size %>
+      </span>
+    </div>
+
+    <div class="mt-3 flex items-baseline justify-between gap-3">
+      <span class="u-label text-ink-soft">
+        <%= t(".sets_done", done: @session.logged_set_count, total: @session.prescribed_set_count) %>
+      </span>
+      <span class="u-label text-done tnum"><%= @session.progress %>%</span>
+    </div>
+
+    <div class="bar mt-2" role="img"
+         aria-label="<%= t(".progress_label", percent: @session.progress) %>">
+      <% 10.times do |i| %>
+        <span class="bar-seg <%= "bar-seg-filled" if (i + 1) * 10 <= @session.progress %>"></span>
+      <% end %>
+    </div>
+
+    <%# The whole-session walkthrough, distinct from a single exercise's demo. %>
+    <% if @day.video? %>
+      <div class="mt-4">
+        <p class="u-label text-ink-soft mb-2"><%= t(".session_video") %></p>
+        <%= render "shared/video", video: @day.video, title: @day.display_name %>
+      </div>
+    <% end %>
+  </header>
+
+  <div class="mt-5">
+    <% if @exercises.any? %>
+      <%= render partial: "block_exercise", collection: @exercises, as: :be %>
+    <% else %>
+      <p class="cue"><%= t(".no_blocks") %></p>
+    <% end %>
+  </div>
+
+  <%# Paging between exercises. Real links, so this works with no JavaScript --
+      the runner controller intercepts the click to avoid the round trip when it
+      is available. Links, not button_to: a form here would sit among the set
+      forms, and that is how a Save once became a DELETE. %>
+  <% if @exercises.size > 1 %>
+    <nav class="mt-6 flex gap-2" aria-label="<%= t(".exercise_nav") %>">
+      <% if @open_index.positive? %>
+        <%= link_to t(".previous"),
+              session_path(@session, ex: @open_index - 1, anchor: "ex-#{@exercises[@open_index - 1].id}"),
+              data: { action: "runner#prev" }, class: "btn btn-quiet tap flex-1" %>
+      <% else %>
+        <span class="btn btn-quiet tap flex-1 opacity-40"><%= t(".previous") %></span>
+      <% end %>
+
+      <% if @open_index < @exercises.size - 1 %>
+        <%= link_to t(".next"),
+              session_path(@session, ex: @open_index + 1, anchor: "ex-#{@exercises[@open_index + 1].id}"),
+              data: { action: "runner#next" }, class: "btn btn-ink tap flex-1" %>
+      <% else %>
+        <span class="btn btn-ink tap flex-1 opacity-40"><%= t(".next") %></span>
+      <% end %>
+    </nav>
+  <% end %>
+
+  <%# Rest countdown. Plain buttons on purpose, same reason as above. %>
+  <div data-rest-timer-target="panel" hidden
+       class="fixed inset-x-0 bottom-0 z-20 border-t-2 border-ink bg-now px-4 py-3 text-white">
+    <div class="mx-auto flex max-w-5xl items-center justify-between gap-4">
+      <span class="u-label"><%= t(".resting") %></span>
+      <span data-rest-timer-target="display" class="display text-[26px] tnum">0:00</span>
+      <button type="button" data-action="rest-timer#dismiss"
+              class="btn btn-sm tap border-2 border-white text-white">
+        <%= t(".skip_rest") %>
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-8 border-t-2 border-ink pt-5">
+    <% if @session.status == "completed" %>
+      <p class="panel-done u-label text-done">
+        <%= t(".completed_at", at: l(@session.completed_at, format: "%d/%m · %H:%M")) %>
+      </p>
+    <% else %>
+      <%= button_to t(".complete"), complete_session_path(@session), method: :patch,
+            class: "btn btn-ink tap w-full",
+            form: { data: { turbo_confirm: t(".complete_warn") } } %>
+    <% end %>
+  </div>
+</div>

@@ -56,9 +56,18 @@
       <h2 class="u-label text-ink-soft"><%= t("dashboard.next_session") %></h2>
       <p class="display mt-2 text-[22px]"><%= @next_day.display_name %></p>
       <p class="cue"><%= @next_day.focus %></p>
-      <div class="mt-4">
-        <span class="btn btn-now w-full"><%= t("dashboard.start_session") %></span>
-      </div>
+      <% if @open_session %>
+        <div class="mt-4">
+          <%= link_to t("dashboard.resume_session"), @open_session,
+                class: "btn btn-now tap w-full" %>
+        </div>
+      <% else %>
+        <div class="mt-4">
+          <%= button_to t("dashboard.start_session"), sessions_path,
+                params: { program_day_id: @next_day.id },
+                class: "btn btn-now tap w-full" %>
+        </div>
+      <% end %>
     <% else %>
       <p class="cue"><%= t("dashboard.no_program") %></p>
     <% end %>

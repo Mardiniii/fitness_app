@@ -4,6 +4,12 @@ Rails.application.routes.draw do
   # Practitioner side
   resource :dashboard, only: [ :show ]
 
+  # Client side -- the gym experience
+  resources :sessions, only: [ :show, :create ] do
+    member { patch :complete }
+    resources :set_logs, only: [ :create ]
+  end
+
   resources :programs do
     member { post :open_draft }
     resources :program_assignments, only: [ :create ], path: "assignments"
@@ -50,5 +56,16 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  root "dashboards#show"
+  # The front door depends on who is knocking. Devise's `authenticated`
+  # constraint keeps the signed-in experience exactly as it was -- "/" is still
+  # the dashboard for a session that has a user -- while a logged-out visitor
+  # gets the public landing page instead of a sign-in form.
+  #
+  # Both routes answer "/", so root_path still generates "/" and every existing
+  # `redirect_to root_path` lands where it always did for a signed-in user.
+  authenticated :user do
+    root "dashboards#show", as: :authenticated_root
+  end
+
+  root "pages#home"
 end

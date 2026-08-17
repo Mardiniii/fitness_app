@@ -22,6 +22,14 @@ class PrescribedSet < ApplicationRecord
 
   def drop_segment? = segment_number > 1
 
+  # Does the client have a number to type for load? Bodyweight and "sin carga"
+  # have none; a band is chosen equipment, not a quantity the client enters.
+  def logs_load? = %w[external machine].include?(load_kind)
+
+  # RPE is only asked for when the practitioner prescribed a target. Cristian
+  # does not put RPE on bodyweight work, so those sets ask for reps alone.
+  def logs_rpe? = target_rpe.present?
+
   # "12", "10-12", "3 min", "300 m", "12 cal"
   def prescription_summary
     case measure_kind
@@ -36,7 +44,7 @@ class PrescribedSet < ApplicationRecord
   def load_summary
     case load_kind
     when "none"       then nil
-    when "bodyweight" then "bodyweight"
+    when "bodyweight" then I18n.t("enums.load_kind.bodyweight")
     when "band"       then equipment_item&.display_name
     else
       return equipment_item&.display_name if load_value.blank?

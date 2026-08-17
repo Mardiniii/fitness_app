@@ -111,12 +111,57 @@ en:
       in_progress: In progress
       completed: Completed
       skipped: Skipped
+  sessions:
+    create:
+      no_program: You have no active program yet.
+      no_day: There is no next day left in this program.
+    complete:
+      done: Session completed.
+    show:
+      week_n: "Week %{n}"
+      sets_done: "%{done} of %{total} sets logged"
+      exercise_nav: Move between exercises
+      previous: Previous
+      next: Next
+      progress_label: "%{percent}% of the sets logged"
+      session_video: Session video
+      no_blocks: This day has no blocks yet.
+      resting: Rest
+      skip_rest: Skip
+      complete: Finish session
+      complete_warn: "Finish this session? You can still edit the sets afterwards."
+      completed_at: "Completed %{at}"
+      queued_html: "%{count} sets waiting to be sent. They will go up on their own when the connection comes back."
+    block:
+      block_n: "Block %{n}"
+      rounds: "%{n} rounds"
+      work: "work %{n}s"
+      rest: "rest %{n}s"
+    exercise:
+      per_side: Per side
+      demo: Watch the movement
+      no_sets: No sets prescribed for this exercise.
+    set:
+      serie_of: "Set %{n} of %{total}"
+      serie_n: "Set %{n}"
+      drop: Drop
+      last_time: Last time
+      performed: Movement performed
+      load: Load
+      complete: Complete set
+      update: Update set
+      skip: Skip
+  set_logs:
+    create:
+      invalid: That set could not be saved.
+      conflict: That set was saved from another device. Reload to see it.
   nav:
     programs: Programs
     library: Library
     sign_out: Sign out
   dashboard:
     last_check_in: Last check-in
+    resume_session: Resume session
     start_session: Start session
     streak: Streak
     sessions: Sessions

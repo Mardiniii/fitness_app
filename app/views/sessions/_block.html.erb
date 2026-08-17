@@ -1,0 +1,28 @@
+<%# Block context for the exercise on screen: which "Bloque" this belongs to and
+    how it is meant to be executed. Renders the header only -- the runner shows
+    one exercise per screen, so blocks are context rather than containers.
+    Locals: pblock (ProgramBlock) %>
+<%
+  meta = []
+  meta << t("sessions.block.rounds", n: pblock.round_count) if pblock.round_count.present?
+  meta << t("sessions.block.work",   n: pblock.work_seconds) if pblock.work_seconds.present?
+  meta << t("sessions.block.rest",   n: pblock.rest_seconds) if pblock.rest_seconds.present?
+%>
+<div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+  <span class="u-label text-ink-soft">
+    <%= pblock.name.presence || t("sessions.block.block_n", n: pblock.position) %>
+  </span>
+  <span class="u-label rounded-brand border-2 border-ink px-2 py-0.5">
+    <%= t("enums.execution_mode.#{pblock.execution_mode}") %>
+  </span>
+  <% if meta.any? %>
+    <span class="u-meta tnum"><%= meta.join(" · ") %></span>
+  <% end %>
+</div>
+
+<% if pblock.focus.present? %>
+  <p class="cue mt-1"><%= pblock.focus %></p>
+<% end %>
+<% if pblock.notes.present? %>
+  <p class="cue mt-1"><%= pblock.notes %></p>
+<% end %>

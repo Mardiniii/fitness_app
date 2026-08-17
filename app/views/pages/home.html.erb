@@ -1,0 +1,629 @@
+<%# The FitFusion landing page: the public front door.
+    Rendered by PagesController#home under the "landing" layout, which is a
+    complete document of its own -- no app chrome, no Tailwind. Spanish ships
+    in the markup; English is applied client side from the data-en attributes,
+    so a visitor with JS off still gets the whole page. %>
+<a class="skip" href="#main" data-en="Skip to content">Saltar al contenido</a>
+
+<!-- ══════════════ MASTHEAD ══════════════ -->
+<header class="mast">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <svg class="mark" viewBox="0 0 24 24" role="img" aria-label="Marca FitFusion" data-en-aria="FitFusion mark">
+        <rect x="0" y="0" width="24" height="24" rx="3" fill="#0D0D0D"/>
+        <rect x="4" y="6.5" width="16" height="3.2" rx="1" fill="#FF4D0D"/>
+        <rect x="4" y="12" width="10.5" height="3.2" rx="1" fill="#4E8F52"/>
+      </svg>
+      Fit<i>Fusion</i>
+    </a>
+    <nav aria-label="Secciones" data-en-aria="Sections">
+      <a href="#problem" data-en="The problem">El problema</a>
+      <a href="#clients" data-en="For clients">Para clientes</a>
+      <a href="#practitioners" data-en="For coaches">Para entrenadores</a>
+      <a href="#hood" data-en="Under the hood">Por dentro</a>
+      <a href="#roadmap" data-en="Roadmap">Hoja de ruta</a>
+    </nav>
+    <%= link_to "Iniciar sesión", new_user_session_path, class: "signin", data: { en: "Sign in" } %>
+    <div class="lang" role="group" aria-label="Idioma / Language">
+      <button type="button" data-lang="es" aria-pressed="true">ES</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <p class="eyebrow hero-eyebrow"><span data-en="Training platform">Plataforma de entrenamiento</span>
+      <span class="dot">·</span>
+      <span data-en="Spanish and English">Español e inglés</span></p>
+    <h1><span data-en="The plan leaves the PDF.">El plan sale del PDF.</span><br><span class="o" data-en="The set gets logged.">Cada serie, registrada.</span></h1>
+    <div class="hero-grid">
+    <div>
+      <p class="lede" data-en="Your coach writes the program in FitFusion. You run it set by set from your phone at the gym. Both of you can see whether the load is actually going up.">Tu
+      entrenador arma el programa en FitFusion. Tú lo ejecutas serie por serie desde el celular en el
+      gimnasio. Los dos pueden ver si la carga de verdad está subiendo.</p>
+
+      <div class="cta-row">
+        <a class="btn-lg solid" href="#clients" data-en="See how a session runs">Ver cómo funciona una sesión</a>
+        <a class="btn-lg ghost" href="#practitioners" data-en="For coaches">Para entrenadores</a>
+      </div>
+
+      <div class="stats" role="list" aria-label="Datos del producto" data-en-aria="Product facts">
+        <div class="stat" role="listitem"><b>144</b><span data-en="Exercises">Ejercicios</span></div>
+        <div class="stat" role="listitem"><b>4</b><span data-en="Classification axes">Ejes de clasificación</span></div>
+        <div class="stat" role="listitem"><b>31</b><span data-en="Equipment items">Equipos</span></div>
+        <div class="stat" role="listitem"><b>2</b><span data-en="Languages">Idiomas</span></div>
+      </div>
+    </div>
+
+    <!-- ── session runner phone · stays in Spanish in both modes ── -->
+    <div>
+      <div class="phone">
+        <div class="scr">
+          <div class="top"><span>Día 2 · Torso</span><span class="pill">2 / 7</span></div>
+          <p class="ex">Press de banca<br>con mancuernas</p>
+          <p class="cue">Sin juntar mancuernas arriba</p>
+
+          <div class="prog" role="img" aria-label="Serie 1 completada, serie 2 en curso, serie 3 pendiente" data-en-aria="Set 1 completed, set 2 in progress, set 3 remaining">
+            <span class="done">1 ✓</span><span class="now">2</span><span class="todo">3</span>
+          </div>
+
+          <div class="block">
+            <p class="lab">Serie 2 de 3</p>
+            <p class="presc"><b>6–8</b><span>REPS · 20 LB · RPE 8</span></p>
+          </div>
+
+          <div class="last">
+            <p class="lab">La vez pasada</p>
+            <p class="v">8 × 20 LB · RPE 7</p>
+          </div>
+
+          <div class="inputs">
+            <div class="inp"><em>Reps</em><b>8</b></div>
+            <div class="inp"><em>Carga</em><b>20</b></div>
+            <div class="inp"><em>RPE</em><b>8</b></div>
+          </div>
+
+          <div class="cta">
+            <div class="btn">Completar serie</div>
+            <p class="rest">Descanso 3:00</p>
+          </div>
+        </div>
+      </div>
+      <p class="mock-cap"><span data-en="Session runner">Sesión en curso</span>
+        <span class="es" data-en="— the screen the client holds mid-set.">— la pantalla que el cliente tiene en la mano entre series.</span></p>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PROBLEM ══════════════ -->
+<section id="problem">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="The problem">El problema</span>
+      <h2 data-en="A PDF doesn't know what you lifted">Un PDF no sabe cuánto levantaste</h2>
+      <p class="lede" data-en="Real coaching already works. The program is good and the coach knows what he is doing. Then it gets sent as a document, discussed over WhatsApp, and the loop stops there. Three things break at once.">El
+      acompañamiento ya funciona. El programa es bueno y el entrenador sabe lo que hace. Pero llega
+      como documento, se comenta por WhatsApp, y ahí se corta el ciclo. Tres cosas se rompen al tiempo.</p>
+    </div>
+
+    <div class="cards c3">
+      <article class="card reveal">
+        <p class="n">01</p>
+        <h3 data-en="Accountability">Cumplimiento</h3>
+        <p data-en="Nobody knows whether Día 3 happened. Not the client, three weeks later. Not the coach, who would have to ask — and asking every client, every week, is a job nobody has time for.">Nadie
+        sabe si el Día 3 se hizo. El cliente no, tres semanas después. El entrenador tampoco: tendría
+        que preguntar, y preguntarle a cada cliente cada semana es un trabajo que nadie tiene tiempo de hacer.</p>
+      </article>
+      <article class="card reveal">
+        <p class="n">02</p>
+        <h3 data-en="Visibility">Visibilidad</h3>
+        <p data-en="“What did I press last time?” has no answer in a PDF. Without it, progressive overload is a guess made under a bar, and the load stays where it was in week one.">«¿Cuánto
+        levanté la vez pasada?» no tiene respuesta en un PDF. Sin eso, la sobrecarga progresiva es una
+        adivinanza debajo de la barra, y la carga se queda donde estaba en la semana uno.</p>
+      </article>
+      <article class="card reveal">
+        <p class="n">03</p>
+        <h3 data-en="Analysis">Análisis</h3>
+        <p data-en="Two years of plans, and no way to see a trend across them. The numbers exist. They are just spread across documents, chat threads, and memory.">Dos
+        años de planes y ninguna forma de ver una tendencia entre ellos. Los números existen. Solo
+        están repartidos entre documentos, chats y memoria.</p>
+      </article>
+    </div>
+
+    <div class="strip reveal" style="margin-top:26px">
+      <span class="dotmark" aria-hidden="true"></span>
+      <p data-en-html="<b>Where this came from.</b> FitFusion started as Sebastián Zapata Mardini’s Critical Challenge Project at Brown University, and before that as his own problem: training with a coach, Cristian Franco, with the plan living in PDFs and WhatsApp. The data model was built backwards from two years of real documents, not forwards from an abstraction."><b>De
+      dónde salió esto.</b> FitFusion empezó como el Critical Challenge Project de Sebastián Zapata
+      Mardini en Brown University, y antes que eso como su propio problema: entrenar con un entrenador,
+      Cristian Franco, con el plan viviendo en PDFs y WhatsApp. El modelo de datos se construyó hacia
+      atrás desde dos años de documentos reales, no hacia adelante desde una abstracción.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOR CLIENTS ══════════════ -->
+<section id="clients">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="For clients">Para clientes</span>
+      <h2 data-en="One exercise. One set. One tap.">Un ejercicio. Una serie. Un toque.</h2>
+      <p class="lede" data-en="The gym is a bad place to read. You have one hand free, sixty seconds of rest, and a phone with a cracked screen protector. The runner shows the set you are on and nothing else.">El
+      gimnasio es un mal lugar para leer. Tienes una mano libre, sesenta segundos de descanso y el
+      celular con el protector rayado. La pantalla muestra la serie en la que vas y nada más.</p>
+    </div>
+
+    <div class="split rev">
+      <div class="mockcol">
+        <div class="phone">
+          <div class="scr">
+            <div class="top"><span>Día 2 · Torso</span><span class="pill">5 / 7</span></div>
+            <p class="ex">Extensión de<br>rodilla en máquina</p>
+            <p class="cue">Controla la bajada</p>
+
+            <div class="prog" role="img" aria-label="Series 1 y 2 completadas, serie 3 en curso" data-en-aria="Sets 1 and 2 completed, set 3 in progress">
+              <span class="done">1 ✓</span><span class="done">2 ✓</span><span class="now">3</span>
+            </div>
+
+            <div class="block">
+              <p class="lab">Serie 3 de 3 · Drop</p>
+              <p class="presc"><b>10</b><span>REPS · 100 LB → 10 · 70 LB</span></p>
+            </div>
+
+            <div class="last">
+              <p class="lab">La vez pasada</p>
+              <p class="v">10 × 90 LB → 10 × 60 LB</p>
+            </div>
+
+            <div class="inputs">
+              <div class="inp"><em>Reps</em><b>10</b></div>
+              <div class="inp"><em>Carga</em><b>100</b></div>
+              <div class="inp"><em>RPE</em><b>9</b></div>
+            </div>
+
+            <div class="cta">
+              <div class="btn">Completar serie</div>
+              <p class="rest">Descanso 2:00</p>
+            </div>
+          </div>
+        </div>
+        <p class="mock-cap"><span data-en="Drop set">Drop set</span>
+          <span class="es" data-en="— one set, two segments, both prescribed and both logged.">— una serie, dos segmentos, los dos prescritos y los dos registrados.</span></p>
+      </div>
+
+      <div>
+        <ul class="flist">
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#4E8F52" stroke-width="2.4" aria-hidden="true">
+              <path d="M3 17l5-6 4 4 5-8"/><path d="M14 7h4v4"/>
+            </svg>
+            <div>
+              <h4 data-en="La vez pasada">La vez pasada</h4>
+              <p data-en="Same exercise, same set number, last time you did it — reps, load and RPE, sitting directly under the prescription. It is the one number that moves the next one.">Mismo
+              ejercicio, misma serie, la última vez que la hiciste: reps, carga y RPE, justo debajo de
+              lo prescrito. Es el número que mueve al siguiente.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.4" aria-hidden="true">
+              <rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 12h6"/>
+            </svg>
+            <div>
+              <h4 data-en="Prefilled, confirmed in one tap">Precargado, se confirma en un toque</h4>
+              <p data-en="Reps, load and RPE arrive filled with what was prescribed. Hit the number and tap once. Miss it and adjust — the log records what happened, not what was asked for.">Reps,
+              carga y RPE llegan con lo prescrito. Si diste el número, un toque. Si no, ajústalo: el
+              registro guarda lo que pasó, no lo que se pidió.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#FF4D0D" stroke-width="2.4" aria-hidden="true">
+              <circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 2h6"/>
+            </svg>
+            <div>
+              <h4 data-en="A rest timer that survives a locked screen">Un cronómetro que sobrevive a la pantalla bloqueada</h4>
+              <p data-en-html="Completing a set starts the rest at the prescribed interval — <span class=&quot;es-quote&quot;>Descanso 3:00</span>. Pocket the phone. It is still counting when you take it out.">Completar
+              la serie arranca el descanso en el intervalo prescrito — <span class="es-quote">Descanso 3:00</span>.
+              Guarda el celular. Sigue contando cuando lo vuelvas a sacar.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.4" aria-hidden="true">
+              <path d="M4 8.5A11 11 0 0 1 20 8.5"/><path d="M7.5 12.5a7 7 0 0 1 9 0"/>
+              <circle cx="12" cy="17" r="1.4" fill="#FF4D0D" stroke="none"/><path d="M3 3l18 18"/>
+            </svg>
+            <div>
+              <h4 data-en="No signal, no problem">Sin señal, sin problema</h4>
+              <p data-en="Sets are written locally and queued when the gym basement has no bars, then replayed on reconnect. Each set carries an identifier generated on the phone, so a queue that retries five times still stores the set once.">Las
+              series se escriben en el celular y quedan en cola cuando el gimnasio no tiene señal;
+              se reenvían al reconectar. Cada serie lleva un identificador generado en el teléfono,
+              así que una cola que reintenta cinco veces guarda la serie una sola vez.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.4" aria-hidden="true">
+              <path d="M4 7h9"/><path d="M4 12h9"/><path d="M4 17h6"/><path d="M17 9l3 3-3 3"/>
+            </svg>
+            <div>
+              <h4 data-en="Substitutions that do not break the chart">Sustituciones que no dañan la gráfica</h4>
+              <p data-en-html="One slot can accept several movements — <span class=&quot;es-quote&quot;>remo en TRX o progresión de pull up</span>. Pick what is free. The log records the exercise you actually did, so neither progression line gets polluted.">Un
+              mismo espacio acepta varios movimientos — <span class="es-quote">remo en TRX o progresión de pull up</span>.
+              Escoge el que esté libre. El registro guarda el ejercicio que de verdad hiciste, así que
+              ninguna línea de progreso se contamina.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.4" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5l5 2.5-5 2.5z" fill="#FF4D0D" stroke="none"/>
+            </svg>
+            <div>
+              <h4 data-en="The coach’s demo, in place">El video del entrenador, donde va</h4>
+              <p data-en="Video attaches to an exercise or to a whole session — YouTube, Vimeo, Google Drive or iCloud. It plays where the movement is, not in a folder somewhere.">El
+              video se adjunta a un ejercicio o a la sesión completa — YouTube, Vimeo, Google Drive o
+              iCloud. Se reproduce donde está el movimiento, no en una carpeta perdida.</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="strip reveal">
+          <span class="dotmark g" aria-hidden="true"></span>
+          <p data-en-html="<b>Spanish is not a translation layer.</b> The plans this was built from are in Spanish, and so is the app for the people who use it that way. English is there too, from the first commit."><b>El
+          español no es una capa de traducción.</b> Los planes de los que salió esto están en español,
+          y así está la app para quien la usa así. El inglés también, desde el primer commit.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOR COACHES ══════════════ -->
+<section id="practitioners">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="For coaches">Para entrenadores</span>
+      <h2 data-en="Write it once. Tailor it per client. Keep the history.">Escríbelo una vez. Ajústalo por cliente. Guarda la historia.</h2>
+      <p class="lede" data-en="A coach who has to hand-type a four-week program will not open the app twice. Authoring is built around duplication, per-set defaults, and a library classified the way the coach already thinks.">Un
+      entrenador que tenga que digitar a mano un programa de cuatro semanas no vuelve a abrir la app.
+      La autoría está construida alrededor de duplicar, de valores por defecto por serie y de una
+      biblioteca clasificada como él ya piensa.</p>
+    </div>
+
+    <div class="split">
+      <div>
+        <ul class="flist">
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.4" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18"/><path d="M9 9v11"/>
+            </svg>
+            <div>
+              <h4 data-en="Weeks, days, blocks — the way plans are actually written">Semanas, días, bloques — como se escriben los planes de verdad</h4>
+              <p data-en="Program → weeks → days → blocks → exercises. Blocks carry one of five execution modes — straight sets, biseries, paired A+B, circuits, intervals — so each renders as itself instead of being flattened into a list.">Programa
+              → semanas → días → bloques → ejercicios. Cada bloque lleva uno de cinco modos de
+              ejecución — series rectas, biseries, bloques A+B, circuitos e intervalos — para que cada
+              uno se vea como es y no aplastado en una lista.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.4" aria-hidden="true">
+              <path d="M4 6h9"/><path d="M4 11h13"/><path d="M4 16h7"/><path d="M18 14v6M15 17h6" stroke="#FF4D0D"/>
+            </svg>
+            <div>
+              <h4 data-en="Prescription lives at the set">La prescripción vive en la serie</h4>
+              <p data-en-html="<span class=&quot;es-quote&quot;>15-12-10 bench press 15/20/25 lb</span> is three different sets, and the model stores it as three. Rep ranges, RPE to the half point, rest intervals, per-side reps, and drop sets as segments inside one set."><span class="es-quote">15-12-10 bench press 15/20/25 lb</span>
+              son tres series distintas, y el modelo las guarda como tres. Rangos de reps, RPE con
+              medios puntos, descansos, reps por lado y drop sets como segmentos dentro de una misma serie.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.4" aria-hidden="true">
+              <rect x="3" y="3" width="12" height="12" rx="2.5"/><rect x="9" y="9" width="12" height="12" rx="2.5" stroke="#FF4D0D"/>
+            </svg>
+            <div>
+              <h4 data-en="Templates, copied on assign">Plantillas que se copian al asignar</h4>
+              <p data-en="Write one program shell, assign it to five clients. Each client gets their own copy, tailored to their injuries and their equipment, without touching the original or the other four.">Escribe
+              un programa una vez y asígnalo a cinco clientes. Cada uno recibe su propia copia,
+              ajustada a sus lesiones y a su equipo, sin tocar el original ni a los otros cuatro.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#4E8F52" stroke-width="2.4" aria-hidden="true">
+              <circle cx="7" cy="6" r="2.6"/><circle cx="7" cy="18" r="2.6"/><circle cx="17" cy="12" r="2.6"/>
+              <path d="M7 8.6v6.8"/><path d="M9.4 6.9C13 7.6 14.4 9.4 14.6 11.4"/>
+            </svg>
+            <div>
+              <h4 data-en="Versions, and assignments that pin one">Versiones, y asignaciones que fijan una</h4>
+              <p data-en="Editing next week’s plan never rewrites last week’s history. An assignment pins a frozen version of the program; moving a client to a newer one is a deliberate act that leaves the old record intact.">Editar
+              el plan de la otra semana nunca reescribe la historia de la anterior. La asignación fija
+              una versión congelada del programa; mover a un cliente a una versión nueva es un acto
+              deliberado que deja intacto el registro anterior.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#0D0D0D" stroke-width="2.4" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/>
+            </svg>
+            <div>
+              <h4 data-en="144 exercises, on the coach’s own four axes">144 ejercicios, en los cuatro ejes del propio entrenador</h4>
+              <p data-en-html="Muscle region, movement structure, training quality, training purpose. That taxonomy came from the coach, not from a stock database. Search is trigram-based and ignores accents, because <span class=&quot;es-quote&quot;>liberacion</span> and <span class=&quot;es-quote&quot;>liberación</span> are the same movement.">Región
+              muscular, estructura del movimiento, cualidad de entrenamiento, propósito de
+              entrenamiento. Esa taxonomía salió del entrenador, no de una base de datos genérica. La
+              búsqueda usa trigramas e ignora tildes, porque <span class="es-quote">liberacion</span> y
+              <span class="es-quote">liberación</span> son el mismo movimiento.</p>
+            </div>
+          </li>
+          <li class="reveal">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#4E8F52" stroke-width="2.4" aria-hidden="true">
+              <path d="M4 19V9"/><path d="M10 19V5"/><path d="M16 19v-7"/><path d="M3 21h18" stroke="#0D0D0D"/>
+            </svg>
+            <div>
+              <h4 data-en="Adherence without chasing anyone">Adherencia sin perseguir a nadie</h4>
+              <p data-en="The roster shows sessions done against sessions prescribed, current streak, and days since the last one. Streak and adherence are computed from real sessions — no invented composite score.">El
+              listado muestra sesiones hechas contra sesiones prescritas, la racha actual y los días
+              desde la última. Racha y adherencia se calculan de sesiones reales — sin puntajes
+              compuestos inventados.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="mockcol">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="t">Clientes</span>
+            <span class="tag hollow">Semana 3</span>
+          </div>
+
+          <div class="roster-row">
+            <p class="rname">Sebastián Zapata</p>
+            <p class="rmeta">Hipertrofia · Torso/Pierna v3</p>
+            <div class="bar" role="img" aria-label="Cuatro de siete sesiones completadas en este ciclo" data-en-aria="Four of seven sessions completed this cycle">
+              <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="n"></i><i></i><i></i>
+            </div>
+            <div class="rstats">
+              <div>Sesiones<b>4/4</b></div>
+              <div class="g">Racha<b>12</b></div>
+              <div>Última<b>2D</b></div>
+            </div>
+          </div>
+
+          <div class="roster-row">
+            <p class="rname">María Restrepo</p>
+            <p class="rmeta">Fuerza base · Full body v1</p>
+            <div class="bar" role="img" aria-label="Dos de siete sesiones completadas en este ciclo" data-en-aria="Two of seven sessions completed this cycle">
+              <i class="f"></i><i class="f"></i><i class="n"></i><i></i><i></i><i></i><i></i>
+            </div>
+            <div class="rstats">
+              <div>Sesiones<b>2/4</b></div>
+              <div class="g">Racha<b>3</b></div>
+              <div class="o">Última<b>9D</b></div>
+            </div>
+          </div>
+        </div>
+        <p class="mock-cap"><span data-en="Client roster">Listado de clientes</span>
+          <span class="es" data-en="— green is what got done, orange is what needs attention.">— verde es lo que se hizo, naranja es lo que necesita atención.</span></p>
+
+        <div class="panel author" style="margin-top:18px">
+          <div class="panel-head">
+            <span class="t">Torso / Pierna · v3</span>
+            <span class="tag done">Publicado</span>
+          </div>
+          <div class="crumbs">
+            <span>Sem 1</span><span>Sem 2</span><span class="on">Sem 3</span><span>Sem 4</span>
+            <span class="on">Día 2 · Torso</span>
+          </div>
+
+          <div class="blockhead">
+            <span class="bt">Bloque 1</span>
+            <span class="bm">Series rectas · 3 rondas</span>
+          </div>
+
+          <div class="exrow">
+            <p class="exname">Press de banca con mancuernas</p>
+            <p class="exnote">Sin juntar mancuernas arriba</p>
+            <div class="axes">
+              <b>Torso empuje</b><b>Bilateral</b><b>Hipertrofia</b><b>Acumulación</b>
+            </div>
+          </div>
+
+          <table class="sets">
+            <caption class="vh" data-en="Prescribed sets for press de banca con mancuernas">Series prescritas para press de banca con mancuernas</caption>
+            <thead>
+              <tr><th scope="col">Serie</th><th scope="col">Reps</th><th scope="col">Carga</th>
+                  <th scope="col">RPE</th><th scope="col">Desc.</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>6–8</td><td>20 lb</td><td>8</td><td>3:00</td></tr>
+              <tr><td>2</td><td>6–8</td><td>20 lb</td><td>8</td><td>3:00</td></tr>
+              <tr><td>3</td><td>6–8</td><td>22.5 lb</td><td>8.5</td><td>3:00</td></tr>
+              <tr class="seg"><td>3b</td><td>8</td><td>15 lb</td><td>—</td><td>drop</td></tr>
+            </tbody>
+          </table>
+
+          <div class="panel-foot">
+            <span class="tag hollow">Duplicar semana</span>
+            <span class="tag hollow">Igual que la anterior</span>
+          </div>
+        </div>
+        <p class="mock-cap"><span data-en="Program authoring">Autoría de programas</span>
+          <span class="es" data-en="— per-set prescription, drop segments, week duplication.">— prescripción por serie, segmentos de drop, duplicar semana.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ UNDER THE HOOD ══════════════ -->
+<section id="hood" class="hood">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="Under the hood">Por dentro</span>
+      <h2 data-en="Honest progress needs an honest model">Un progreso honesto necesita un modelo honesto</h2>
+      <p class="lede" data-en="Most of what makes a training app trustworthy is decided in the schema, months before anyone sees a chart. Three decisions do most of the work.">Casi
+      todo lo que hace confiable a una app de entrenamiento se decide en el esquema, meses antes de
+      que alguien vea una gráfica. Tres decisiones hacen la mayor parte del trabajo.</p>
+    </div>
+
+    <div class="cards c3">
+      <article class="card reveal">
+        <p class="n">01</p>
+        <h3 data-en="Prescription ≠ execution">Prescripción ≠ ejecución</h3>
+        <p data-en="What was asked for and what was done are two separate trees that never mix. A program has no completion flag on it, because completion belongs to a person on a date. Without that split, two clients on one program overwrite each other’s history.">Lo
+        que se pidió y lo que se hizo son dos árboles separados que nunca se mezclan. Un programa no
+        lleva bandera de completado, porque completar le pertenece a una persona en una fecha. Sin esa
+        separación, dos clientes en un mismo programa se sobrescriben la historia.</p>
+      </article>
+      <article class="card reveal">
+        <p class="n">02</p>
+        <h3 data-en="Versions, pinned">Versiones, fijadas</h3>
+        <p data-en="Program identity and program content are different records. Publishing freezes content; an assignment pins the frozen version. The answer to “what was I actually told to do in March” survives every edit made since.">La
+        identidad del programa y su contenido son registros distintos. Publicar congela el contenido;
+        la asignación fija esa versión congelada. La respuesta a «¿qué me mandaron a hacer en marzo?»
+        sobrevive a cada edición posterior.</p>
+      </article>
+      <article class="card reveal">
+        <p class="n">03</p>
+        <h3 data-en="The load is structured">La carga es estructurada</h3>
+        <p data-en-html="A green power band is a resistance specification, not a note. Reps, time, distance and calories are all first-class measures, so <span class=&quot;es-quote&quot;>12 row cal</span> and <span class=&quot;es-quote&quot;>0.18 millas</span> track like any other set.">Una
+        banda verde es una especificación de resistencia, no una nota. Reps, tiempo, distancia y
+        calorías son medidas de primera clase, así que <span class="es-quote">12 row cal</span> y
+        <span class="es-quote">0.18 millas</span> se rastrean como cualquier otra serie.</p>
+      </article>
+    </div>
+
+    <div class="diagram reveal">
+      <p class="lab" data-en="The two trees, and the one join between them">Los dos árboles, y la única unión entre ellos</p>
+      <div class="chain">
+        <code>program</code><span class="arrow">→</span>
+        <code>version</code><span class="arrow">→</span>
+        <code>week</code><span class="arrow">→</span>
+        <code>day</code><span class="arrow">→</span>
+        <code>block</code><span class="arrow">→</span>
+        <code>block_exercise</code><span class="arrow">→</span>
+        <code>prescribed_set</code>
+      </div>
+      <div class="chain" style="margin-top:10px">
+        <code class="pin">assignment</code><span class="arrow">→</span>
+        <code class="exec">session</code><span class="arrow">→</span>
+        <code class="exec">set_log</code>
+      </div>
+      <p class="joinline" data-en-html="<b>The assignment is the join.</b> It ties one client to one frozen version. Everything above it is reusable and stateless; everything below it belongs to a person, a date, and a number they actually hit."><b>La
+      asignación es la unión.</b> Ata a un cliente a una versión congelada. Todo lo que está arriba es
+      reutilizable y sin estado; todo lo que está abajo le pertenece a una persona, a una fecha y a un
+      número que de verdad se hizo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ ROADMAP ══════════════ -->
+<section id="roadmap">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow" data-en="Roadmap">Hoja de ruta</span>
+      <h2 data-en="First the loop closes">Primero se cierra el ciclo</h2>
+      <p class="lede" data-en="Nothing else counts until a real session is logged from a real gym. Same colours as the app: green is done, orange is now, outlined is later.">Nada
+      más cuenta hasta que una sesión real quede registrada desde un gimnasio real. Los mismos colores
+      de la app: verde es hecho, naranja es ahora, contorno es después.</p>
+    </div>
+
+    <div class="meter reveal" role="img" aria-label="Diez de veintitrés pasos completados, uno en curso" data-en-aria="Ten of twenty-three build steps complete, one in progress">
+      <i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i>
+      <i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i><i class="d"></i>
+      <i class="n"></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <div class="meterk">
+      <span class="kd" data-en="▪ 10 done">▪ 10 hechos</span>
+      <span class="kn" data-en="▪ 1 in flight">▪ 1 en curso</span>
+      <span data-en="▪ 12 ahead">▪ 12 por delante</span>
+    </div>
+
+    <div class="rmap">
+      <article class="phase reveal">
+        <div class="ph-top"><span class="tag done" data-en="Done">Hecho</span><span class="eyebrow">M0 – M2</span></div>
+        <h3 data-en="Library &amp; authoring">Biblioteca y autoría</h3>
+        <ul>
+          <li><span class="tick d" aria-hidden="true"></span><span data-en="Schema — prescription and execution as separate trees">Esquema — prescripción y ejecución como árboles separados</span></li>
+          <li><span class="tick d" aria-hidden="true"></span><span data-en="144 exercises, 31 equipment items, four-axis taxonomy">144 ejercicios, 31 equipos, taxonomía de cuatro ejes</span></li>
+          <li><span class="tick d" aria-hidden="true"></span><span data-en="Program shell — versions, draft and publish, week duplication">Estructura de programa — versiones, borrador y publicación, duplicar semana</span></li>
+          <li><span class="tick d" aria-hidden="true"></span><span data-en="Block editor — five execution modes, nested paired blocks, session video">Editor de bloques — cinco modos de ejecución, bloques A+B anidados, video de sesión</span></li>
+          <li><span class="tick d" aria-hidden="true"></span><span data-en="Set prescription — uniform or per set, drop segments">Prescripción de series — uniforme o por serie, segmentos de drop</span></li>
+          <li><span class="tick d" aria-hidden="true"></span><span data-en="Assign to client — templates copy, ordinary programs share">Asignar a un cliente — las plantillas se copian, los programas normales se comparten</span></li>
+        </ul>
+      </article>
+
+      <article class="phase reveal">
+        <div class="ph-top"><span class="tag now" data-en="In progress">En curso</span><span class="eyebrow">M2.5 – M3</span></div>
+        <h3 data-en="The session runner">La sesión en el gimnasio</h3>
+        <ul>
+          <li><span class="tick n" aria-hidden="true"></span><span data-en="Deploy — the runner has to be exercised from a gym, not from localhost">Despliegue — la sesión hay que probarla desde un gimnasio, no desde localhost</span></li>
+          <li><span class="tick" aria-hidden="true"></span><span data-en="Today, session overview, day N unlocks when N−1 completes">Hoy, resumen de la sesión, el día N se abre cuando se cierra el N−1</span></li>
+          <li><span class="tick" aria-hidden="true"></span><span data-en-html="Set logging with the technique cue and <span class=&quot;es-quote&quot;>la vez pasada</span>">Registro de series con la nota de técnica y <span class="es-quote">la vez pasada</span></span></li>
+          <li><span class="tick" aria-hidden="true"></span><span data-en="Rest timer and substitution picker">Cronómetro de descanso y selector de sustituciones</span></li>
+          <li><span class="tick" aria-hidden="true"></span><span data-en="Offline queue and replay on reconnect">Cola sin conexión y reenvío al reconectar</span></li>
+          <li><span class="tick" aria-hidden="true"></span><span data-en="Weekly check-in and progress views">Chequeo semanal y vistas de progreso</span></li>
+        </ul>
+      </article>
+
+      <article class="phase later reveal">
+        <div class="ph-top"><span class="tag later" data-en="Later">Después</span><span class="eyebrow" data-en="Next">Siguiente</span></div>
+        <h3 data-en="Import, wearables, a second client">Importar, wearables, un segundo cliente</h3>
+        <ul>
+          <li><span class="tick" aria-hidden="true"></span><span data-en-html="Plan import — paste a <span class=&quot;es-quote&quot;>SEMANA</span> document, get a draft to correct">Importar planes — pegar un documento <span class="es-quote">SEMANA</span> y recibir un borrador para corregir</span></li>
+          <li><span class="tick" aria-hidden="true"></span><span data-en="Fuzzy exercise matching and duplicate merge, for what the importer creates">Emparejamiento difuso de ejercicios y fusión de duplicados, para lo que crea el importador</span></li>
+          <li><span class="tick" aria-hidden="true"></span><span data-en="Wearables — heart rate, calories and sleep by export">Wearables — frecuencia cardiaca, calorías y sueño por exportación</span></li>
+          <li><span class="tick" aria-hidden="true"></span><span data-en="Invite flow and roster, so a second client starts without help">Invitaciones y listado, para que un segundo cliente arranque sin ayuda</span></li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="strip reveal" style="margin-top:22px">
+      <span class="dotmark" aria-hidden="true"></span>
+      <p data-en-html="<b>One gate, written down in advance.</b> If real sessions are not being logged four weeks after the runner ships, the problem is the product — not the missing features. That gets fixed before anything else is built."><b>Una
+      compuerta, escrita de antemano.</b> Si cuatro semanas después de que salga la sesión no se están
+      registrando sesiones reales, el problema es el producto — no las funciones que faltan. Eso se
+      arregla antes de construir cualquier otra cosa.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p class="eyebrow" style="margin-bottom:12px" data-en="Origin">Origen</p>
+        <h3 style="margin-bottom:12px" data-en="A master’s project with a real coach behind it">Un proyecto de maestría con un entrenador real detrás</h3>
+        <p data-en="FitFusion began as the Critical Challenge Project for Sebastián Zapata Mardini’s master’s at Brown University: seven interviews, two rounds of testing, personas, journey maps, a competitive read. The product that came out of it is narrower than the paper and built from two years of real plans — two generations of training programs, all in Spanish, all written for one client by someone who does this for a living.">FitFusion
+        nació como el Critical Challenge Project de la maestría de Sebastián Zapata Mardini en Brown
+        University: siete entrevistas, dos rondas de pruebas, perfiles de usuario, mapas de recorrido
+        y un análisis de competencia. El producto que salió de ahí es más angosto que el documento y
+        está construido sobre dos años de planes reales — dos generaciones de programas de
+        entrenamiento, todos en español, todos escritos para un cliente por alguien que vive de esto.</p>
+      </div>
+
+      <div>
+        <p class="eyebrow" style="margin-bottom:12px" data-en="Credits">Créditos</p>
+        <ul class="credits">
+          <li>
+            <p class="role" data-en="Training">Entrenamiento</p>
+            <p class="who">Cristian Franco</p>
+          </li>
+          <li>
+            <p class="role" data-en="Product, design, engineering">Producto, diseño e ingeniería</p>
+            <p class="who">Sebastián Zapata Mardini</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="colophon">
+      <span data-en="FitFusion · August 2026">FitFusion · Agosto 2026</span>
+      <span>Español · English</span>
+      <span data-en="Orange means now. Green means done.">Naranja es ahora. Verde es hecho.</span>
+    </div>
+  </div>
+</footer>

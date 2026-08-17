@@ -15,6 +15,22 @@ class Session < ApplicationRecord
     update!(status: "in_progress", started_at: Time.current) if status == "pending"
   end
 
+  # all_blocks, not program_blocks: the latter is scoped to top-level blocks, so
+  # a day containing a nested "bloque A + bloque B" would report a total that
+  # excludes the nested sets -- and progress would sit above 100%.
+  def prescribed_set_count
+    PrescribedSet.joins(:block_exercise)
+                 .where(block_exercises: { program_block_id: program_day.all_blocks.select(:id) })
+                 .count
+  end
+
+  def logged_set_count = set_logs.where(skipped: false).count
+
+  def progress
+    total = prescribed_set_count
+    total.zero? ? 0 : ((logged_set_count.to_f / total) * 100).round
+  end
+
   def complete!
     update!(status: "completed", completed_at: Time.current,
             duration_seconds: started_at && (Time.current - started_at).round)

@@ -1,0 +1,123 @@
+<%# One prescribed set (or one segment of a drop set) and the form to log it.
+    Each row is its own top-level form. Nothing here may nest another form --
+    that bug once turned a Save into a DELETE.
+    Locals: be, ps, total_sets %>
+<%
+  log      = @logs[[ be.id, ps.set_number, ps.segment_number ]]
+  done     = log.present?
+  row_id   = "set-#{be.id}-#{ps.set_number}-#{ps.segment_number}"
+  rest     = ps.rest_seconds
+  alts     = be.alternative_exercises
+
+  # Bodyweight work has no load to type and, in these plans, no prescribed RPE.
+  # Written as literal class names because Tailwind scans source text and would
+  # never see an interpolated grid-cols-#{n}.
+  logs_load = ps.logs_load?
+  logs_rpe  = ps.logs_rpe?
+  grid_cols = { 1 => "grid-cols-1", 2 => "grid-cols-2", 3 => "grid-cols-3" }
+               .fetch(1 + (logs_load ? 1 : 0) + (logs_rpe ? 1 : 0))
+%>
+
+<div data-set-row id="<%= row_id %>" class="mt-4">
+
+  <%# The prescription. Orange while it is the set to do now, green once done,
+      quiet outline for sets still ahead. %>
+  <div class="<%= done ? "panel-done" : "block-now" %>">
+    <div class="u-label <%= done ? "text-done" : "" %>">
+      <%= t("sessions.set.serie_of", n: ps.set_number, total: total_sets) %><%
+        %><%= " · #{t("sessions.set.drop")}" if ps.drop_segment? %>
+    </div>
+
+    <div class="mt-1 flex flex-wrap items-baseline gap-x-2 tnum">
+      <span class="display text-[34px] leading-none"><%= ps.prescription_summary %></span>
+      <span class="text-[13.5px] font-bold">
+        <%= [ t("enums.measure_kind.#{ps.measure_kind}").upcase,
+              ps.load_summary&.upcase,
+              (ps.target_rpe.present? ? "RPE #{number_with_precision(ps.target_rpe, precision: 1, strip_insignificant_zeros: true)}" : nil)
+            ].compact_blank.join(" · ") %>
+      </span>
+    </div>
+
+    <% if ps.load_note.present? %>
+      <p class="mt-1 text-[12.5px] font-semibold"><%= ps.load_note %></p>
+    <% end %>
+  </div>
+
+  <%= form_with url: session_set_logs_path(@session), method: :post,
+        data: { action: "submit->offline-queue#submit" },
+        class: "mt-2" do %>
+
+    <%= hidden_field_tag "block_exercise_id", be.id, id: "#{row_id}-be" %>
+    <%= hidden_field_tag "set_number",        ps.set_number,     id: "#{row_id}-sn" %>
+    <%= hidden_field_tag "segment_number",    ps.segment_number, id: "#{row_id}-sg" %>
+    <%# Generated per render. A queued offline submission replays with the same
+        key, so the retry updates its own row rather than writing a second. %>
+    <%= hidden_field_tag "client_uuid", (log&.client_uuid || SecureRandom.uuid), id: "#{row_id}-uuid" %>
+    <% if logs_load %>
+      <%= hidden_field_tag "load_unit", (log&.load_unit || ps.load_unit), id: "#{row_id}-lu" %>
+    <% end %>
+
+    <% if alts.any? %>
+      <div class="mb-2">
+        <%= label_tag "#{row_id}-ex", t("sessions.set.performed"), class: "field-label" %>
+        <%= select_tag "exercise_id",
+              options_from_collection_for_select(be.acceptable_exercises, :id, :name_es,
+                log&.exercise_id || be.exercise_id),
+              id: "#{row_id}-ex", class: "field tap" %>
+      </div>
+    <% end %>
+
+    <div class="grid <%= grid_cols %> gap-2">
+      <div>
+        <%= label_tag "#{row_id}-m", t("enums.measure_kind.#{ps.measure_kind}"), class: "field-label" %>
+        <% case ps.measure_kind %>
+        <% when "reps" %>
+          <%= number_field_tag "reps_completed", (log&.reps_completed || ps.reps_min),
+                id: "#{row_id}-m", min: 0, inputmode: "numeric", class: "field-num tap" %>
+        <% when "time" %>
+          <%= number_field_tag "duration_seconds", (log&.duration_seconds || ps.work_seconds),
+                id: "#{row_id}-m", min: 0, inputmode: "numeric", class: "field-num tap" %>
+        <% when "distance" %>
+          <%= number_field_tag "distance_value", (log&.distance_value || ps.distance_value),
+                id: "#{row_id}-m", min: 0, step: "0.01", inputmode: "decimal", class: "field-num tap" %>
+        <% when "calories" %>
+          <%= number_field_tag "calories", (log&.calories || ps.calories),
+                id: "#{row_id}-m", min: 0, inputmode: "numeric", class: "field-num tap" %>
+        <% end %>
+      </div>
+
+      <% if logs_load %>
+        <div>
+          <%= label_tag "#{row_id}-load", t("sessions.set.load"), class: "field-label" %>
+          <%= number_field_tag "load_value", (log&.load_value || ps.load_value),
+                id: "#{row_id}-load", min: 0, step: "0.5", inputmode: "decimal",
+                class: "field-num tap" %>
+        </div>
+      <% end %>
+
+      <% if logs_rpe %>
+        <div>
+          <%= label_tag "#{row_id}-rpe", "RPE", class: "field-label" %>
+          <%= number_field_tag "rpe_reported", (log&.rpe_reported || ps.target_rpe),
+                id: "#{row_id}-rpe", min: 1, max: 10, step: "0.5", inputmode: "decimal",
+                class: "field-num tap" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-2 flex gap-2">
+      <button type="submit"
+              class="btn tap flex-1 <%= done ? "btn-done" : "btn-now" %>"
+              <% if rest.present? %>
+                data-action="rest-timer#start"
+                data-rest-timer-seconds-param="<%= rest %>"
+              <% end %>>
+        <%= done ? t("sessions.set.update") : t("sessions.set.complete") %>
+      </button>
+
+      <button type="submit" name="skipped" value="1" class="btn btn-quiet btn-sm tap">
+        <%= t("sessions.set.skip") %>
+      </button>
+    </div>
+  <% end %>
+</div>

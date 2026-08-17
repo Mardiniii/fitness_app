@@ -21,6 +21,9 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
 
   config.include FactoryBot::Syntax::Methods
+  # travel_to: session duration and "la vez pasada" ordering are both
+  # time-dependent, and asserting them against the wall clock is flaky.
+  config.include ActiveSupport::Testing::TimeHelpers
   config.include AuthHelpers, type: :request
   config.include ErrorPageHelpers, type: :request
 

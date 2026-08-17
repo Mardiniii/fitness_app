@@ -13,6 +13,13 @@ class ProgramDay < ApplicationRecord
 
   def display_name = name.presence || "Día #{position}"
 
+  # The order the client actually works in: depth-first through the block tree,
+  # so a paired "bloque A + bloque B" yields A's exercises then B's rather than
+  # every top-level slot first. The runner shows one of these per screen.
+  def ordered_block_exercises
+    program_blocks.flat_map { |block| walk_block(block) }
+  end
+
   # A walkthrough of the whole session. Distinct from Exercise#video, which
   # explains a single movement.
   def video  = VideoLink.wrap(reference_url)
@@ -30,5 +37,11 @@ class ProgramDay < ApplicationRecord
     # "bloque A + bloque B" structures come across intact.
     program_blocks.order(:position).each { |block| block.copy_into!(day: copy) }
     copy
+  end
+
+  private
+
+  def walk_block(block)
+    block.block_exercises.to_a + block.child_blocks.flat_map { |child| walk_block(child) }
   end
 end
