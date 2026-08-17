@@ -7,4 +7,11 @@
     <span class="stat-k text-now"><%= t("exercises.index.pending") %></span>
   <% end %>
 </div>
+<% if @exercise.video? %>
+  <div class="mt-6 max-w-md">
+    <div class="u-label mb-2 text-ink-soft"><%= t("exercises.video.title") %></div>
+    <%= render "video", exercise: @exercise %>
+  </div>
+<% end %>
+
 <%= render "form", exercise: @exercise %>

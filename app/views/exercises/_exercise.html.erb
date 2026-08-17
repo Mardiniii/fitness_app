@@ -20,6 +20,14 @@
                     tone: exercise.training_quality_aceleracion? ? :now : :ink) %>
       <%= axis_chip("training_purpose", exercise.training_purpose,
                     tone: exercise.training_purpose_movilidad? ? :done : :ink) %>
+      <% if exercise.video? %>
+        <span class="inline-flex items-center gap-0.5 text-[10px] font-extrabold uppercase
+                     tracking-[0.08em] text-ink-soft" title="<%= t('exercises.video.title') %>">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="size-3" aria-hidden="true">
+            <path d="M8 5v14l11-7z"/>
+          </svg>video
+        </span>
+      <% end %>
       <% if exercise.default_equipment_item %>
         <span class="text-[10px] font-semibold text-ink-faint">
           · <%= exercise.default_equipment_item.display_name %>

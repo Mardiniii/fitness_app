@@ -66,6 +66,10 @@ class Exercise < ApplicationRecord
 
   def display_name = name_es
 
+  # nil when no URL is set, so views can just check presence
+  def video = VideoLink.wrap(reference_url)
+  def video? = reference_url.present?
+
   def discarded? = discarded_at.present?
 
   # Everywhere this exercise is referenced. Being merely an *alternative* on a

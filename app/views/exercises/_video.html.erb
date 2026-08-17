@@ -1,0 +1,49 @@
+<%# Renders a video reference. Embeddable providers get a click-to-load player;
+    anything else gets an honest link-out card. %>
+<% video = exercise.video %>
+<% if video %>
+  <div class="rounded-brand border-2 border-line">
+    <% if video.embeddable? %>
+      <div class="relative aspect-video overflow-hidden rounded-t-[2px] bg-ink"
+           data-controller="video"
+           data-video-src-value="<%= video.embed_url %>"
+           data-video-title="<%= exercise.name_es %>">
+        <div data-video-target="frame" class="absolute inset-0"></div>
+
+        <button type="button" data-action="video#play" data-video-target="poster"
+                class="group absolute inset-0 flex items-center justify-center">
+          <% if video.thumbnail_url %>
+            <img src="<%= video.thumbnail_url %>" alt=""
+                 class="absolute inset-0 h-full w-full object-cover opacity-80
+                        transition group-hover:opacity-60">
+          <% end %>
+          <span class="relative flex size-14 items-center justify-center rounded-full
+                       bg-now text-white shadow-lg transition group-hover:scale-105">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="ml-1 size-6" aria-hidden="true">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </span>
+          <span class="sr-only"><%= t("exercises.video.play") %></span>
+        </button>
+      </div>
+    <% else %>
+      <div class="flex items-center gap-3 p-4">
+        <span class="flex size-10 shrink-0 items-center justify-center rounded-brand bg-ink text-white">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="ml-0.5 size-5" aria-hidden="true">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </span>
+        <div class="min-w-0">
+          <div class="text-[13px] font-bold"><%= t("exercises.video.external") %></div>
+          <div class="cue truncate"><%= video.host || video.url %></div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="flex items-center justify-between gap-3 border-t-2 border-line px-3 py-2">
+      <span class="stat-k"><%= video.provider.to_s.upcase %></span>
+      <%= link_to t("exercises.video.open"), video.url, target: "_blank", rel: "noopener",
+            class: "u-label text-ink-soft underline decoration-2 underline-offset-4 hover:text-now" %>
+    </div>
+  </div>
+<% end %>

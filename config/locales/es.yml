@@ -143,6 +143,11 @@ es:
   errors:
     practitioners_only: Esta sección es solo para profesionales.
   exercises:
+    video:
+      title: Video de referencia
+      play: Reproducir video
+      open: Abrir
+      external: Enlace externo
     index:
       title: Biblioteca de ejercicios
       subtitle: "%{total} movimientos, extraídos de los planes reales."
@@ -180,6 +185,8 @@ es:
       technique_hint: Se muestra al cliente en el momento de ejecutar la serie.
       save: Guardar
       cancel: Cancelar
+      danger_zone: Zona de riesgo
+      delete_hint: Este ejercicio no está en uso, así que se puede eliminar de forma definitiva.
       delete: Eliminar
       archive: Archivar
       delete_warn: "¿Eliminar este ejercicio? No está en uso, así que se borra definitivamente."
