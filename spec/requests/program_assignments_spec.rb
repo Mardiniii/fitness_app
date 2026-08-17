@@ -26,12 +26,16 @@ RSpec.describe "Program assignments", type: :request do
     expect(ProgramAssignment.last.client).to eq(client)
   end
 
+  # show_exceptions is :rescuable in test, so a scoped `find` surfaces as a 404
+  # rather than a raised exception -- same as the programs spec.
   it "refuses to assign somebody else's client" do
     program = published_program
     stranger = create(:client)
 
     expect { post program_program_assignments_path(program), params: { client_id: stranger.id } }
-      .to raise_error(ActiveRecord::RecordNotFound)
+      .not_to change(ProgramAssignment, :count)
+
+    expect(response).to have_http_status(:not_found)
   end
 
   it "reports rather than raising when nothing is published" do

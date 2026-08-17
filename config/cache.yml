@@ -12,5 +12,6 @@ test:
   <<: *default
 
 production:
-  database: cache
+  # No `database:` key: production.rb uses :memory_store, and naming a database
+  # here would make SolidCache::Record connect to one that does not exist.
   <<: *default

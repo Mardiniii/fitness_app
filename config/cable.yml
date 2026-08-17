@@ -9,9 +9,7 @@ test:
   adapter: test
 
 production:
-  adapter: solid_cable
-  connects_to:
-    database:
-      writing: cable
-  polling_interval: 0.1.seconds
-  message_retention: 1.day
+  # V1 has no websockets. solid_cable would need its own database, and its
+  # Record class calls connects_to at load time -- so an unconfigured `cable`
+  # database crashes the app at boot, not at first use.
+  adapter: async

@@ -12,27 +12,20 @@ RSpec.describe "Application boot" do
     expect { Rails.application.eager_load! }.not_to raise_error
   end
 
-  # Belt and braces: enumerate every enum value on every model and confirm the
-  # methods Rails will generate do not already exist on ActiveRecord::Base.
-  it "defines no enum whose generated methods collide with ActiveRecord" do
+  # Enum/ActiveRecord collisions are already caught above: Rails raises at
+  # class-definition time, and eager loading is what triggers it. A separate
+  # audit only reproduced that check badly -- it compared the raw enum value
+  # against ActiveRecord's methods while ignoring the prefix, so a correctly
+  # prefixed value like PlanImport's "committed" (which generates
+  # status_committed!) was reported as a collision that does not exist.
+  #
+  # What is worth asserting instead is that the eager load above is not
+  # vacuous. If it silently loaded nothing, it would pass while guarding
+  # nothing at all.
+  it "actually loads the application's models" do
     Rails.application.eager_load!
-    reserved = ActiveRecord::Base.instance_methods
 
-    collisions = ApplicationRecord.descendants.flat_map do |model|
-      model.defined_enums.flat_map do |attribute, values|
-        values.keys.filter_map do |value|
-          # Rails generates "value?" and "value!" (plus the prefix, if any)
-          candidates = [ :"#{value}?", :"#{value}!" ]
-          next if candidates.none? { |m| reserved.include?(m) }
-          next if model.instance_method(:"#{value}?").owner != model rescue nil
-
-          "#{model.name}##{attribute} value #{value.inspect}"
-        end
-      end
-    end
-
-    expect(collisions).to be_empty,
-      "these enum values generate methods ActiveRecord already defines:\n  " \
-      "#{collisions.join("\n  ")}"
+    expect(ApplicationRecord.descendants.size).to be >= 20
+    expect(ApplicationRecord.descendants.map(&:name)).to include("PlanImport", "PrescribedSet")
   end
 end
