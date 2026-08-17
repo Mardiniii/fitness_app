@@ -1,0 +1,35 @@
+<% content_for :title, t("devise.sessions.new.sign_in") %>
+
+<div class="mx-auto max-w-sm py-6">
+  <h1 class="display text-center text-[30px]">FIT<span class="text-now">FUSION</span></h1>
+  <p class="u-label mt-2 text-center text-ink-soft"><%= t("devise.sessions.new.sign_in") %></p>
+
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name),
+               html: { class: "mt-7 space-y-4" }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <div>
+      <%= f.label :email, class: "field-label" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "field" %>
+    </div>
+
+    <div>
+      <%= f.label :password, class: "field-label" %>
+      <%= f.password_field :password, autocomplete: "current-password", required: true, class: "field" %>
+    </div>
+
+    <% if devise_mapping.rememberable? %>
+      <label class="flex cursor-pointer items-center gap-2 text-[13px] font-semibold text-ink-soft">
+        <%= f.check_box :remember_me, class: "size-4 rounded-[3px] border-2 border-ink text-now focus:ring-0" %>
+        <%= t("activerecord.attributes.user.remember_me", default: "Recordarme") %>
+      </label>
+    <% end %>
+
+    <%= f.submit t("devise.sessions.new.sign_in"), class: "btn btn-now w-full" %>
+  <% end %>
+
+  <p class="mt-5 text-center">
+    <%= link_to t("devise.shared.links.forgot_your_password"), new_password_path(resource_name),
+          class: "u-label text-ink-soft underline decoration-2 underline-offset-4 hover:text-ink" %>
+  </p>
+</div>

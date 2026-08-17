@@ -1,0 +1,38 @@
+es:
+  devise:
+    sessions:
+      new:
+        sign_in: Iniciar sesión
+      signed_in: Sesión iniciada.
+      signed_out: Sesión cerrada.
+      already_signed_out: Sesión cerrada.
+    failure:
+      already_authenticated: Ya iniciaste sesión.
+      invalid: "%{authentication_keys} o contraseña inválidos."
+      not_found_in_database: "%{authentication_keys} o contraseña inválidos."
+      timeout: Tu sesión expiró. Inicia sesión nuevamente.
+      unauthenticated: Necesitas iniciar sesión para continuar.
+    passwords:
+      new:
+        forgot_your_password: ¿Olvidaste tu contraseña?
+        send_instructions: Enviar instrucciones
+      edit:
+        change_your_password: Cambiar contraseña
+        new_password: Nueva contraseña
+        change_my_password: Guardar contraseña
+      send_instructions: Recibirás un correo con instrucciones en unos minutos.
+      updated: Tu contraseña fue actualizada. Sesión iniciada.
+      no_token: No puedes acceder a esta página sin venir desde un correo de recuperación.
+    shared:
+      minimum_password_length: "%{count} caracteres como mínimo"
+      links:
+        sign_in: Iniciar sesión
+        forgot_your_password: ¿Olvidaste tu contraseña?
+    mailer:
+      reset_password_instructions:
+        subject: Instrucciones para recuperar tu contraseña
+  errors:
+    messages:
+      not_saved:
+        one: "No se pudo guardar: 1 error"
+        other: "No se pudo guardar: %{count} errores"

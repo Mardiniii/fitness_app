@@ -111,3 +111,18 @@ es:
       in_progress: En progreso
       completed: Completada
       skipped: Omitida
+  nav:
+    sign_out: Cerrar sesión
+  dashboard:
+    last_check_in: Último reporte
+    start_session: Empezar sesión
+    streak: Racha
+    sessions: Sesiones
+    title: Inicio
+    greeting: "Hola, %{name}"
+    clients: Clientes
+    programs: Programas
+    next_session: Próxima sesión
+    no_clients: Aún no tienes clientes.
+    no_programs: Aún no has creado programas.
+    no_program: No tienes un programa asignado todavía.

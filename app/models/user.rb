@@ -2,6 +2,10 @@
 # trainers/nutritionists/clients tables -- a person can be a practitioner and
 # somebody else's client at the same time.
 class User < ApplicationRecord
+  # No :registerable -- clients never self-sign-up. A practitioner invites them,
+  # which is how the product actually works and removes a whole attack surface.
+  devise :database_authenticatable, :recoverable, :rememberable, :validatable
+
   pg_enum :role, %w[practitioner client admin], validate: true
   pg_enum :unit_preference, %w[metric imperial], prefix: :units, validate: true
 
@@ -27,8 +31,8 @@ class User < ApplicationRecord
 
   normalizes :email, with: ->(value) { value.to_s.strip }
 
-  validates :email, presence: true, uniqueness: { case_sensitive: false }
-  validates :name,  presence: true
+  # email presence/format/uniqueness comes from Devise's :validatable
+  validates :name, presence: true
 
   scope :kept, -> { where(discarded_at: nil) }
 

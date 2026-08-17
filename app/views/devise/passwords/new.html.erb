@@ -1,0 +1,22 @@
+<% content_for :title, t("devise.passwords.new.forgot_your_password") %>
+
+<div class="mx-auto max-w-sm py-6">
+  <h1 class="display text-[22px]"><%= t("devise.passwords.new.forgot_your_password") %></h1>
+
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name),
+               html: { method: :post, class: "mt-6 space-y-4" }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <div>
+      <%= f.label :email, class: "field-label" %>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "field" %>
+    </div>
+
+    <%= f.submit t("devise.passwords.new.send_instructions"), class: "btn btn-now w-full" %>
+  <% end %>
+
+  <p class="mt-5">
+    <%= link_to t("devise.shared.links.sign_in"), new_session_path(resource_name),
+          class: "u-label text-ink-soft underline decoration-2 underline-offset-4 hover:text-ink" %>
+  </p>
+</div>

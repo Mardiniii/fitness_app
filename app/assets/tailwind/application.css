@@ -1,1 +1,134 @@
 @import "tailwindcss";
+
+/* =============================================================================
+   FitFusion — "Impacto C1"
+   The whole system rests on one rule:
+
+       ORANGE means NOW.    GREEN means DONE.
+
+   Orange marks the live set, the active client, the thing demanding attention.
+   Green marks completion — finished sets, streaks, adherence, "la vez pasada".
+   Never use either decoratively; if it is not now or done, it is ink.
+   ============================================================================= */
+
+@theme {
+  /* --- neutrals --- */
+  --color-ink: #0D0D0D;
+  --color-ink-soft: #5C5C5C;
+  --color-ink-faint: #9A9A9A;
+  --color-line: #E4E2DD;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #F5F4F1;
+
+  /* --- semantic --- */
+  --color-now: #FF4D0D;
+  --color-now-deep: #DB3E00;
+  --color-done: #3E8B4A;      /* poster sage, tuned for legibility at 7px */
+  --color-done-deep: #2F7038;
+  --color-warn: #B45309;
+
+  /* Sharp corners are the point of this direction. One radius, everywhere. */
+  --radius-brand: 4px;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-surface text-ink antialiased; font-feature-settings: "cv05", "ss01"; }
+
+  /* Numbers are the content in this app — always tabular so columns line up
+     and a changing rep count does not shift the layout. */
+  input[type="number"], .tnum { font-variant-numeric: tabular-nums; }
+}
+
+@layer components {
+
+  /* ---------- type ---------- */
+  .display {
+    @apply font-extrabold uppercase tracking-[-0.035em] leading-[1.02];
+  }
+  .u-label {
+    @apply text-[10.5px] font-extrabold uppercase tracking-[0.12em];
+  }
+  .u-meta {
+    @apply text-[11.5px] font-medium text-ink-soft;
+  }
+  .cue {
+    @apply text-[12.5px] font-medium text-ink-soft;
+  }
+
+  /* ---------- surfaces ---------- */
+  .card {
+    @apply rounded-brand border-2 border-ink bg-surface;
+  }
+  .card-quiet {
+    @apply rounded-brand border border-line bg-surface;
+  }
+
+  /* The live prescription. Orange, because it is what to do NOW. */
+  .block-now {
+    @apply rounded-brand bg-now p-4 text-white;
+  }
+  /* A finished or historical reference. Green, because it is DONE. */
+  .panel-done {
+    @apply rounded-brand border-2 border-done p-3;
+  }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-brand
+           px-5 py-4 text-[14.5px] font-extrabold uppercase tracking-[0.05em]
+           transition-colors disabled:opacity-40;
+  }
+  .btn-ink   { @apply bg-ink text-white hover:bg-black; }
+  .btn-now   { @apply bg-now text-white hover:bg-now-deep; }
+  .btn-done  { @apply bg-done text-white hover:bg-done-deep; }
+  .btn-quiet { @apply border-2 border-ink bg-surface text-ink hover:bg-surface-alt; }
+  .btn-sm    { @apply px-3 py-2 text-[11.5px]; }
+
+  /* ---------- set progress strip ----------
+     The clearest expression of the system: done green, current orange,
+     remaining outlined. Readable at a glance mid-set. */
+  .chip {
+    @apply flex-1 rounded-brand border-2 py-2 text-center text-[11px]
+           font-extrabold uppercase tracking-[0.06em] tabular-nums;
+  }
+  .chip-done { @apply border-done bg-done text-white; }
+  .chip-now  { @apply border-now bg-now text-white; }
+  .chip-todo { @apply border-line text-ink-faint; }
+
+  /* ---------- forms ---------- */
+  .field {
+    @apply w-full rounded-brand border-2 border-ink bg-surface px-3 py-2.5
+           text-[15px] font-semibold text-ink
+           focus:border-now focus:outline-none focus:ring-0
+           placeholder:font-normal placeholder:text-ink-faint;
+  }
+  .field-label {
+    @apply mb-1 block text-[10.5px] font-extrabold uppercase tracking-[0.1em] text-ink-soft;
+  }
+  /* Big centred numeric input for logging a set one-handed */
+  .field-num {
+    @apply w-full rounded-brand border-2 border-ink bg-surface py-2 text-center
+           text-[25px] font-extrabold tracking-[-0.03em] tabular-nums
+           focus:border-now focus:outline-none;
+  }
+
+  /* ---------- stats ---------- */
+  .stat-k { @apply text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-soft; }
+  .stat-v { @apply text-[21px] font-extrabold tracking-[-0.03em] tabular-nums; }
+  .stat-v-done { @apply text-done; }
+  .stat-v-now  { @apply text-now; }
+
+  /* Adherence bar: filled segments are completed sessions, so they are green */
+  .bar     { @apply flex gap-[3px]; }
+  .bar-seg { @apply h-[7px] flex-1 rounded-[2px] bg-line; }
+  .bar-seg-filled { @apply bg-done; }
+
+  /* ---------- flash ---------- */
+  .flash        { @apply rounded-brand border-2 px-4 py-3 text-[13.5px] font-semibold; }
+  .flash-notice { @apply border-done text-done-deep; }
+  .flash-alert  { @apply border-now text-now-deep; }
+}

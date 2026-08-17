@@ -96,3 +96,18 @@ en:
       in_progress: In progress
       completed: Completed
       skipped: Skipped
+  nav:
+    sign_out: Sign out
+  dashboard:
+    last_check_in: Last check-in
+    start_session: Start session
+    streak: Streak
+    sessions: Sessions
+    title: Home
+    greeting: "Hi, %{name}"
+    clients: Clients
+    programs: Programs
+    next_session: Next session
+    no_clients: No clients yet.
+    no_programs: No programs created yet.
+    no_program: You have no assigned program yet.
