@@ -145,6 +145,44 @@ es:
     no_program: No tienes un programa asignado todavía.
   errors:
     practitioners_only: Esta sección es solo para profesionales.
+  block_exercises:
+    form:
+      measure: Medida
+      reps: Repeticiones
+      load: Carga
+      rpe: RPE
+      rest: "Descanso (seg)"
+      load_kind: Tipo de carga
+      unit: Unidad
+      equipment: Equipo
+      seconds: "Tiempo (seg)"
+      distance: "Distancia (m)"
+      calories: Calorías
+      drop_reps: "Drop: reps"
+      drop_load: "Drop: carga"
+    edit:
+      set_count: Número de series
+      mode: Modo
+      mode_uniform: Iguales
+      mode_per_set: Por serie
+      mode_hint: "Usa «Iguales» cuando las tres series son idénticas. Usa «Por serie» para esquemas como 15-12-10 con 15/20/25lb."
+      per_side: Por lado
+      per_side_hint: "Las repeticiones son por brazo o por pierna"
+      uniform_title: Prescripción para todas las series
+      per_set_title: Prescripción serie por serie
+      per_set_hint: "Solo se usa si eliges «Por serie». El campo Drop añade un segundo tramo dentro de la misma serie, como 12+12."
+      set_n: "Serie %{n}"
+      has_drop: con drop
+      technique: Notas de técnica
+      technique_placeholder: "Ej: Sin juntar mancuernas arriba"
+      save: Guardar prescripción
+      cancel: Cancelar
+      alternatives: Alternativas
+      alternatives_hint: "Movimientos que el cliente puede hacer en lugar de este, como «remo en TRX o progresión de pull up»."
+      add_alternative: Añadir alternativa
+      remove: Quitar
+    update:
+      saved: "Prescripción de %{name} guardada."
   program_days:
     show:
       back: Volver al programa
@@ -163,6 +201,7 @@ es:
       series: "%{n} series"
       rest: "descanso %{n}s"
       per_side: por lado
+      edit_sets: Series
       remove_block_warn: "¿Quitar este bloque y todos sus ejercicios?"
   programs:
     locked: Esta versión ya está publicada. Crea un borrador nuevo para editarla.

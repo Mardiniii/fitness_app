@@ -27,9 +27,12 @@ Rails.application.routes.draw do
     resources :block_exercises, only: [ :create ]
   end
 
-  resources :block_exercises, only: [ :update, :destroy ] do
+  resources :block_exercises, only: [ :edit, :update, :destroy ] do
     member { post :move }
+    resources :alternatives, only: [ :create ], controller: "block_exercise_alternatives"
   end
+
+  resources :block_exercise_alternatives, only: [ :destroy ], path: "alternatives"
 
   resources :exercises, except: [ :show ] do
     member     { patch :confirm; patch :restore }

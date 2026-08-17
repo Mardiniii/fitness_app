@@ -130,6 +130,44 @@ en:
     no_program: You have no assigned program yet.
   errors:
     practitioners_only: This section is for practitioners only.
+  block_exercises:
+    form:
+      measure: Measure
+      reps: Reps
+      load: Load
+      rpe: RPE
+      rest: "Rest (sec)"
+      load_kind: Load type
+      unit: Unit
+      equipment: Equipment
+      seconds: "Time (sec)"
+      distance: "Distance (m)"
+      calories: Calories
+      drop_reps: "Drop: reps"
+      drop_load: "Drop: load"
+    edit:
+      set_count: Number of sets
+      mode: Mode
+      mode_uniform: Identical
+      mode_per_set: Per set
+      mode_hint: "Use Identical when all sets match. Use Per set for schemes like 15-12-10 at 15/20/25lb."
+      per_side: Per side
+      per_side_hint: "Reps are per arm or per leg"
+      uniform_title: Prescription for every set
+      per_set_title: Prescription set by set
+      per_set_hint: "Only used when Per set is selected. The Drop field adds a second segment inside the same set, like 12+12."
+      set_n: "Set %{n}"
+      has_drop: has drop
+      technique: Technique notes
+      technique_placeholder: "e.g. Do not touch dumbbells at the top"
+      save: Save prescription
+      cancel: Cancel
+      alternatives: Alternatives
+      alternatives_hint: "Movements the client may do instead of this one, like \"TRX row or pull-up progression\"."
+      add_alternative: Add alternative
+      remove: Remove
+    update:
+      saved: "Prescription for %{name} saved."
   program_days:
     show:
       back: Back to program
@@ -148,6 +186,7 @@ en:
       series: "%{n} sets"
       rest: "rest %{n}s"
       per_side: per side
+      edit_sets: Sets
       remove_block_warn: "Remove this block and all its exercises?"
   programs:
     locked: This version is already published. Open a new draft to edit it.

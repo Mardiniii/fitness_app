@@ -3,7 +3,7 @@ class BlockExercisesController < ApplicationController
   include ProgramScoped
 
   before_action :set_block,          only: :create
-  before_action :set_block_exercise, only: %i[update destroy move]
+  before_action :set_block_exercise, only: %i[edit update destroy move]
 
   def create
     guard_editable!(version_for(@block)) or return
@@ -27,11 +27,26 @@ class BlockExercisesController < ApplicationController
     redirect_to program_day_path(@block.program_day), status: :see_other
   end
 
+  def edit
+    @day = @block_exercise.program_block.program_day
+    @library = Exercise.kept.order(:muscle_region, :name_es)
+  end
+
   def update
     guard_editable!(version_for(@block_exercise.program_block)) or return
 
-    @block_exercise.update(block_exercise_params)
-    redirect_to program_day_path(@block_exercise.program_block.program_day), status: :see_other
+    @block_exercise.update!(block_exercise_params)
+    builder = PrescriptionBuilder.new(@block_exercise, prescription_params)
+
+    if builder.save!
+      redirect_to program_day_path(@block_exercise.program_block.program_day),
+                  notice: t(".saved", name: @block_exercise.exercise.name_es), status: :see_other
+    else
+      @day = @block_exercise.program_block.program_day
+      @library = Exercise.kept.order(:muscle_region, :name_es)
+      flash.now[:alert] = builder.error
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -78,5 +93,19 @@ class BlockExercisesController < ApplicationController
 
   def block_exercise_params
     params.require(:block_exercise).permit(:per_side, :technique_notes)
+  end
+
+  def prescription_params
+    params.permit(
+      :mode, :set_count,
+      uniform: PrescriptionBuilder::SET_FIELDS,
+      sets: [ PrescriptionBuilder::SET_FIELDS + %i[drop_reps drop_load] ]
+    ).tap do |p|
+      # `sets` arrives as an index-keyed hash, which strong params cannot
+      # describe declaratively; permit each row explicitly.
+      p[:sets] = params[:sets]&.to_unsafe_h&.transform_values do |row|
+        row.slice(*(PrescriptionBuilder::SET_FIELDS + %i[drop_reps drop_load]).map(&:to_s))
+      end
+    end
   end
 end

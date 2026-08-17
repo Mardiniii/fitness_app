@@ -35,6 +35,8 @@
 
     <% if editable %>
       <div class="flex shrink-0 gap-1">
+        <%= link_to t("program_days.show.edit_sets"), edit_block_exercise_path(block_exercise),
+              class: "btn btn-ink btn-sm" %>
         <%= button_to "↑", move_block_exercise_path(block_exercise, direction: "up"),
               method: :post, class: "btn btn-quiet btn-sm" %>
         <%= button_to "↓", move_block_exercise_path(block_exercise, direction: "down"),

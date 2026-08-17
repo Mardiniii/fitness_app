@@ -1,0 +1,100 @@
+<%# One row of prescription inputs. Used for both the uniform row and each
+    per-set row, so the two modes cannot drift apart.
+    Locals: prefix (String), set (PrescribedSet or nil), show_drop (Boolean) %>
+<div class="grid gap-2 sm:grid-cols-12">
+  <div class="sm:col-span-3">
+    <label class="field-label"><%= t("block_exercises.form.measure") %></label>
+    <%= select_tag "#{prefix}[measure_kind]",
+          options_for_select(PrescribedSet.measure_kinds.keys.map { |v| [ enum_label("measure_kind", v), v ] },
+                             set&.measure_kind || "reps"),
+          class: "field py-1.5 text-[13px]" %>
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="field-label"><%= t("block_exercises.form.reps") %></label>
+    <div class="flex items-center gap-1">
+      <%= number_field_tag "#{prefix}[reps_min]", set&.reps_min, min: 1,
+            class: "field-num py-1 text-[16px]", placeholder: "12" %>
+      <span class="text-ink-faint">–</span>
+      <%= number_field_tag "#{prefix}[reps_max]", set&.reps_max, min: 1,
+            class: "field-num py-1 text-[16px]", placeholder: "—" %>
+    </div>
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="field-label"><%= t("block_exercises.form.load") %></label>
+    <div class="flex items-center gap-1">
+      <%= number_field_tag "#{prefix}[load_value]", set&.load_value&.to_f&.round(1), step: 0.5,
+            class: "field-num py-1 text-[16px]", placeholder: "40" %>
+      <span class="text-ink-faint">/</span>
+      <%= number_field_tag "#{prefix}[load_value_max]", set&.load_value_max&.to_f&.round(1), step: 0.5,
+            class: "field-num py-1 text-[16px]", placeholder: "—" %>
+    </div>
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="field-label"><%= t("block_exercises.form.rpe") %></label>
+    <%= number_field_tag "#{prefix}[target_rpe]", set&.target_rpe&.to_f, step: 0.5, min: 1, max: 10,
+          class: "field-num py-1 text-[16px]", placeholder: "8.5" %>
+  </div>
+
+  <div class="sm:col-span-3">
+    <label class="field-label"><%= t("block_exercises.form.rest") %></label>
+    <%= number_field_tag "#{prefix}[rest_seconds]", set&.rest_seconds, min: 0, step: 5,
+          class: "field py-1.5 text-[13px]", placeholder: "120" %>
+  </div>
+
+  <div class="sm:col-span-4">
+    <label class="field-label"><%= t("block_exercises.form.load_kind") %></label>
+    <%= select_tag "#{prefix}[load_kind]",
+          options_for_select(PrescribedSet.load_kinds.keys.map { |v| [ enum_label("load_kind", v), v ] },
+                             set&.load_kind || "none"),
+          class: "field py-1.5 text-[13px]" %>
+  </div>
+
+  <div class="sm:col-span-2">
+    <label class="field-label"><%= t("block_exercises.form.unit") %></label>
+    <%= select_tag "#{prefix}[load_unit]",
+          options_for_select([ [ "lb", "lb" ], [ "kg", "kg" ] ], set&.load_unit),
+          include_blank: "—", class: "field py-1.5 text-[13px]" %>
+  </div>
+
+  <div class="sm:col-span-6">
+    <label class="field-label"><%= t("block_exercises.form.equipment") %></label>
+    <%= select_tag "#{prefix}[equipment_item_id]",
+          options_from_collection_for_select(EquipmentItem.order(:name_es), :id, :display_name,
+                                             set&.equipment_item_id),
+          include_blank: "—", class: "field py-1.5 text-[13px]" %>
+  </div>
+
+  <% if defined?(show_time) && show_time %>
+    <div class="sm:col-span-3">
+      <label class="field-label"><%= t("block_exercises.form.seconds") %></label>
+      <%= number_field_tag "#{prefix}[work_seconds]", set&.work_seconds, min: 1,
+            class: "field py-1.5 text-[13px]", placeholder: "30" %>
+    </div>
+    <div class="sm:col-span-3">
+      <label class="field-label"><%= t("block_exercises.form.distance") %></label>
+      <%= number_field_tag "#{prefix}[distance_value]", set&.distance_value&.to_f, step: 1,
+            class: "field py-1.5 text-[13px]", placeholder: "300" %>
+    </div>
+    <div class="sm:col-span-3">
+      <label class="field-label"><%= t("block_exercises.form.calories") %></label>
+      <%= number_field_tag "#{prefix}[calories]", set&.calories, min: 1,
+            class: "field py-1.5 text-[13px]", placeholder: "12" %>
+    </div>
+  <% end %>
+
+  <% if show_drop %>
+    <div class="sm:col-span-3">
+      <label class="field-label"><%= t("block_exercises.form.drop_reps") %></label>
+      <%= number_field_tag "#{prefix}[drop_reps]", nil, min: 1,
+            class: "field py-1.5 text-[13px]", placeholder: "12" %>
+    </div>
+    <div class="sm:col-span-3">
+      <label class="field-label"><%= t("block_exercises.form.drop_load") %></label>
+      <%= number_field_tag "#{prefix}[drop_load]", nil, step: 0.5,
+            class: "field py-1.5 text-[13px]", placeholder: "70" %>
+    </div>
+  <% end %>
+</div>
