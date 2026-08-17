@@ -1,31 +1,98 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  activerecord:
+    models:
+      user: { one: User, other: Users }
+      practitioner_profile: { one: Practitioner profile, other: Practitioner profiles }
+      client_profile: { one: Client profile, other: Client profiles }
+      practitioner_client: { one: Relationship, other: Relationships }
+      client_injury: { one: Injury, other: Injuries }
+      equipment_item: { one: Equipment item, other: Equipment items }
+      client_equipment: { one: Client equipment, other: Client equipment }
+      exercise: { one: Exercise, other: Exercises }
+      program: { one: Program, other: Programs }
+      program_version: { one: Program version, other: Program versions }
+      program_week: { one: Week, other: Weeks }
+      program_day: { one: Day, other: Days }
+      program_block: { one: Block, other: Blocks }
+      block_exercise: { one: Block exercise, other: Block exercises }
+      prescribed_set: { one: Prescribed set, other: Prescribed sets }
+      program_assignment: { one: Assignment, other: Assignments }
+      session: { one: Session, other: Sessions }
+      set_log: { one: Set log, other: Set logs }
+      check_in: { one: Check-in, other: Check-ins }
+      plan_import: { one: Plan import, other: Plan imports }
+
+    attributes:
+      user:
+        email: Email
+        name: Name
+        role: Role
+        unit_preference: Units
+      client_profile:
+        birth_year: Birth year
+        height_cm: Height (cm)
+        goal: Goal
+      exercise:
+        name_es: Name
+        muscle_group: Muscle group
+        technique_notes: Technique notes
+        reference_url: Reference video
+      prescribed_set:
+        set_number: Set
+        target_rpe: Target RPE
+        rest_seconds: Rest (sec)
+        load_value: Load
+      check_in:
+        week_of: Week
+        bodyweight_kg: Bodyweight (kg)
+        feeling: General feeling
+        sleep_hours_avg: Average sleep hours
+        notes: Progress notes
+
+    errors:
+      models:
+        practitioner_client:
+          attributes:
+            client_id:
+              cannot_coach_self: cannot be the practitioner themselves
+        program_assignment:
+          attributes:
+            client_id:
+              cannot_coach_self: cannot be the practitioner themselves
+        program_block:
+          attributes:
+            parent_block_id:
+              cannot_nest_in_self: cannot be nested inside itself
+        block_exercise_alternative:
+          attributes:
+            exercise_id:
+              already_prescribed: is already the prescribed exercise
+        set_log:
+          attributes:
+            exercise_id:
+              not_an_accepted_substitution: is not an accepted substitution for this exercise
+        prescribed_set:
+          measure_value_missing: "is missing a value for measure kind (%{kind})"
+
+  enums:
+    execution_mode:
+      straight_sets: Straight sets
+      circuit: Circuit
+      interval: Interval
+      paired: Paired blocks
+    measure_kind:
+      reps: Reps
+      time: Time
+      distance: Distance
+      calories: Calories
+    load_kind:
+      none: No load
+      bodyweight: Bodyweight
+      external: External load
+      band: Band
+      machine: Machine
+    session_status:
+      pending: Pending
+      in_progress: In progress
+      completed: Completed
+      skipped: Skipped

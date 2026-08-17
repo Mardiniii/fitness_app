@@ -23,6 +23,18 @@ module Fitfusion
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
 
+    # Spanish is the working language of this product. Cristian's programs and
+    # Andres's meal plans are written in Spanish, and both practitioners work in
+    # it daily. English is a fallback so a missing key degrades to English rather
+    # than rendering "translation missing".
+    config.i18n.available_locales = %i[es en]
+    config.i18n.default_locale = :es
+    config.i18n.fallbacks = [ :en ]
+
+    # Timestamps stay UTC; each user carries their own timezone column and the
+    # controller wraps requests in Time.use_zone.
+    config.time_zone = "UTC"
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.

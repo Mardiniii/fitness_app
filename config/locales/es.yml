@@ -1,0 +1,113 @@
+es:
+  activerecord:
+    models:
+      user: { one: Usuario, other: Usuarios }
+      practitioner_profile: { one: Perfil profesional, other: Perfiles profesionales }
+      client_profile: { one: Perfil de cliente, other: Perfiles de cliente }
+      practitioner_client: { one: Relación, other: Relaciones }
+      client_injury: { one: Lesión, other: Lesiones }
+      equipment_item: { one: Equipo, other: Equipos }
+      client_equipment: { one: Equipo del cliente, other: Equipos del cliente }
+      exercise: { one: Ejercicio, other: Ejercicios }
+      program: { one: Programa, other: Programas }
+      program_version: { one: Versión del programa, other: Versiones del programa }
+      program_week: { one: Semana, other: Semanas }
+      program_day: { one: Día, other: Días }
+      program_block: { one: Bloque, other: Bloques }
+      block_exercise: { one: Ejercicio del bloque, other: Ejercicios del bloque }
+      prescribed_set: { one: Serie prescrita, other: Series prescritas }
+      program_assignment: { one: Asignación, other: Asignaciones }
+      session: { one: Sesión, other: Sesiones }
+      set_log: { one: Serie registrada, other: Series registradas }
+      check_in: { one: Reporte semanal, other: Reportes semanales }
+      plan_import: { one: Importación de plan, other: Importaciones de plan }
+
+    attributes:
+      user:
+        email: Correo electrónico
+        name: Nombre
+        role: Rol
+        locale: Idioma
+        unit_preference: Unidades
+      client_profile:
+        birth_year: Año de nacimiento
+        height_cm: Estatura (cm)
+        goal: Objetivo
+      exercise:
+        name_es: Nombre
+        muscle_group: Grupo muscular
+        technique_notes: Notas de técnica
+        reference_url: Video de referencia
+      program_block:
+        execution_mode: Modo de ejecución
+        round_count: Series
+        work_seconds: Trabajo (seg)
+        rest_seconds: Descanso (seg)
+      block_exercise:
+        per_side: Por lado
+        technique_notes: Notas de técnica
+      prescribed_set:
+        set_number: Serie
+        reps_min: Repeticiones mínimas
+        reps_max: Repeticiones máximas
+        target_rpe: RPE objetivo
+        rest_seconds: Descanso (seg)
+        load_value: Carga
+      check_in:
+        week_of: Semana
+        bodyweight_kg: Peso corporal (kg)
+        feeling: Sensación general
+        sleep_hours_avg: Horas de sueño promedio
+        notes: Notas del progreso
+      set_log:
+        reps_completed: Repeticiones realizadas
+        load_value: Carga usada
+        rpe_reported: RPE reportado
+
+    errors:
+      models:
+        practitioner_client:
+          attributes:
+            client_id:
+              cannot_coach_self: no puede ser el mismo profesional
+        program_assignment:
+          attributes:
+            client_id:
+              cannot_coach_self: no puede ser el mismo profesional
+        program_block:
+          attributes:
+            parent_block_id:
+              cannot_nest_in_self: no puede anidarse dentro de sí mismo
+        block_exercise_alternative:
+          attributes:
+            exercise_id:
+              already_prescribed: ya es el ejercicio prescrito
+        set_log:
+          attributes:
+            exercise_id:
+              not_an_accepted_substitution: no es una alternativa válida para este ejercicio
+        prescribed_set:
+          measure_value_missing: "falta el valor para el tipo de medida (%{kind})"
+
+  enums:
+    execution_mode:
+      straight_sets: Series por ejercicio
+      circuit: En circuito
+      interval: Por tiempo
+      paired: Bloques combinados
+    measure_kind:
+      reps: Repeticiones
+      time: Tiempo
+      distance: Distancia
+      calories: Calorías
+    load_kind:
+      none: Sin carga
+      bodyweight: Peso corporal
+      external: Carga externa
+      band: Banda elástica
+      machine: Máquina
+    session_status:
+      pending: Pendiente
+      in_progress: En progreso
+      completed: Completada
+      skipped: Omitida
