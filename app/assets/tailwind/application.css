@@ -11,6 +11,21 @@
    Never use either decoratively; if it is not now or done, it is ink.
    ============================================================================= */
 
+/* Self-hosted so the PWA keeps its typography offline, and so a client on gym
+   wifi does not wait on two extra TLS handshakes to Google before any text
+   renders. One variable file covers 100-900, which is smaller than the six
+   static weights the CDN was serving.
+
+   Propshaft resolves this url() against app/assets/fonts and fingerprints it;
+   the path stays relative on purpose so the digest is applied. */
+@font-face {
+  font-family: "Inter";
+  src: url("InterVariable.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   /* --- neutrals --- */
   --color-ink: #0D0D0D;
