@@ -47,6 +47,12 @@ puts "  practitioner: #{practitioner.email}"
 puts "  client:       #{client.email}"
 puts "  password:     #{DEFAULT_PASSWORD}"
 
-# Development sample: a real week from Cristian's plan, so the authoring
-# screens have genuine structure to render.
-load Rails.root.join("db/seeds/sample_program.rb") unless Rails.env.production?
+# SEMANA 1 of the real plan. Not fixture data -- it is the week Sebastian is
+# actually training -- so it is worth having in production too, where it gives
+# the deployed app something to walk end to end. Opt-in there, on by default
+# everywhere else.
+if ENV.fetch("SEED_SAMPLE_PROGRAM", Rails.env.production? ? "false" : "true") == "true"
+  load Rails.root.join("db/seeds/sample_program.rb")
+else
+  puts "  sample program skipped (set SEED_SAMPLE_PROGRAM=true to include it)"
+end

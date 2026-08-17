@@ -150,9 +150,25 @@ DAYS.each do |d|
   end
 end
 
+# Publish and assign once. Re-running refreshes the draft but never touches an
+# existing published version, because an assignment pins one and a client's
+# logged sessions hang off it.
+client = User.find_by(email: ENV.fetch("SEED_CLIENT_EMAIL", "sebastian@fitfusion.local"))
+
+if program.published_version.nil? && client
+  version.publish!
+  assignment = program.assign_to!(client: client, starts_on: Date.new(2026, 7, 7))
+  state = "publicada v#{assignment.program_version.version_number} y asignada a #{client.name}"
+elsif client
+  state = "ya publicada y asignada; borrador actualizado"
+else
+  state = "sin cliente para asignar"
+end
+
 sets = PrescribedSet.joins(block_exercise: { program_block: :program_day })
                     .where(program_days: { program_week_id: week.id })
 puts "  sample program: #{program.name} (SEMANA 1, inicio 07/07/2026)"
 puts "    #{week.program_days.count} días · " \
      "#{ProgramBlock.where(program_day: week.program_days).count} bloques · " \
      "#{sets.count} series prescritas · #{sets.where('segment_number > 1').count} segmento(s) de drop set"
+puts "    #{state}"
