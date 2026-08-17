@@ -1,0 +1,32 @@
+<% content_for :title, t(".title") %>
+
+<div class="flex flex-wrap items-start justify-between gap-3">
+  <div>
+    <h1 class="display text-[28px]"><%= t(".title") %></h1>
+    <p class="cue mt-1"><%= t(".subtitle") %></p>
+  </div>
+  <%= link_to t(".new"), new_program_path, class: "btn btn-ink btn-sm tap" %>
+</div>
+
+<% if @programs.any? %>
+  <ul class="card mt-6 px-4">
+    <% @programs.each do |program| %>
+      <li class="flex items-center justify-between gap-4 border-b border-line py-3 last:border-b-0">
+        <div class="min-w-0">
+          <%= link_to program.name, program, class: "text-[15px] font-bold hover:text-now" %>
+          <p class="cue"><%= program.goal %></p>
+        </div>
+        <div class="flex shrink-0 items-center gap-3">
+          <% if program.draft_version %>
+            <span class="stat-k text-now"><%= t(".draft", n: program.draft_version.version_number) %></span>
+          <% end %>
+          <% if program.published_version %>
+            <span class="stat-k text-done"><%= t(".published", n: program.published_version.version_number) %></span>
+          <% end %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="cue mt-8"><%= t(".empty") %></p>
+<% end %>

@@ -24,6 +24,7 @@ es:
 
     attributes:
       user:
+        remember_me: Recordarme
         email: Correo electrónico
         name: Nombre
         role: Rol
@@ -125,6 +126,7 @@ es:
       completed: Completada
       skipped: Omitida
   nav:
+    programs: Programas
     library: Biblioteca
     sign_out: Cerrar sesión
   dashboard:
@@ -142,6 +144,58 @@ es:
     no_program: No tienes un programa asignado todavía.
   errors:
     practitioners_only: Esta sección es solo para profesionales.
+  programs:
+    locked: Esta versión ya está publicada. Crea un borrador nuevo para editarla.
+    index:
+      title: Programas
+      subtitle: Planes de entrenamiento que creas para tus clientes.
+      new: Nuevo programa
+      empty: Aún no has creado programas.
+      draft: "Borrador v%{n}"
+      published: "Publicada v%{n}"
+    new:
+      title: Nuevo programa
+    edit:
+      title: Editar programa
+    form:
+      name_placeholder: "Ej: Hipertrofia / Pérdida de grasa"
+      goal_placeholder: "Ej: Ganar masa muscular"
+      save: Guardar
+      cancel: Cancelar
+    show:
+      draft_badge: "Borrador v%{n}"
+      published_badge: "Publicada v%{n}"
+      rename: Editar datos
+      publish: Publicar
+      publish_warn: "¿Publicar esta versión? Quedará disponible para asignar a clientes."
+      new_draft: Nuevo borrador
+      start_draft: Empezar borrador
+      read_only: Esta versión está publicada y no se puede editar. Crea un borrador nuevo para hacer cambios.
+      no_version: Este programa aún no tiene contenido.
+      no_weeks: Aún no hay semanas. Añade la primera.
+      add_week: Añadir semana
+      add_day: Añadir día
+      duplicate: Duplicar
+      remove: Quitar
+      save: Guardar
+      week_focus: "Enfoque de la semana"
+      day_focus: "Ej: PIERNA (ENFOQUE CUÁDRICEPS)"
+      remove_week_warn: "¿Quitar esta semana y todos sus días?"
+      remove_day_warn: "¿Quitar este día?"
+    create:
+      created: "%{name} creado."
+    update:
+      updated: Programa actualizado.
+    destroy:
+      discarded: "%{name} archivado."
+    open_draft:
+      draft_opened: Borrador abierto.
+  program_versions:
+    publish:
+      published: "Versión %{n} publicada."
+      empty: No puedes publicar una versión sin semanas.
+    fork:
+      forked: "Borrador v%{n} creado a partir de la versión publicada."
   exercises:
     video:
       title: Video de referencia

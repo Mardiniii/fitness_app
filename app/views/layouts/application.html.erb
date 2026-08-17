@@ -36,6 +36,8 @@
 
           <div class="flex items-center gap-3">
             <% if current_user.practitioner? %>
+              <%= link_to t("nav.programs"), programs_path,
+                    class: "u-label text-ink-soft hover:text-now" %>
               <%= link_to t("nav.library"), exercises_path,
                     class: "u-label text-ink-soft hover:text-now" %>
             <% end %>

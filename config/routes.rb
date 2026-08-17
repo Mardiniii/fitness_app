@@ -4,6 +4,22 @@ Rails.application.routes.draw do
   # Practitioner side
   resource :dashboard, only: [ :show ]
 
+  resources :programs do
+    member { post :open_draft }
+  end
+
+  resources :program_versions, only: [] do
+    member { patch :publish; post :fork }
+    resources :program_weeks, only: [ :create ]
+  end
+
+  resources :program_weeks, only: [ :update, :destroy ] do
+    member { post :duplicate }
+    resources :program_days, only: [ :create ]
+  end
+
+  resources :program_days, only: [ :update, :destroy ]
+
   resources :exercises, except: [ :show ] do
     member     { patch :confirm; patch :restore }
     collection { patch :confirm_all }

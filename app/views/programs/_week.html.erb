@@ -1,0 +1,38 @@
+<section class="card mt-4">
+  <div class="flex flex-wrap items-center gap-2 border-b-2 border-line p-3">
+    <% if editable %>
+      <%= form_with model: week, url: program_week_path(week), method: :patch,
+                    class: "flex flex-1 flex-wrap items-center gap-2" do |f| %>
+        <%= f.text_field :name, value: week.name, placeholder: week.display_name,
+              class: "field w-36 py-1.5 text-[13px] font-extrabold uppercase" %>
+        <%= f.text_field :focus, value: week.focus, placeholder: t("programs.show.week_focus"),
+              class: "field flex-1 min-w-[11rem] py-1.5 text-[13px]" %>
+        <%= f.submit t("programs.show.save"), class: "btn btn-quiet btn-sm" %>
+      <% end %>
+      <div class="flex shrink-0 gap-2">
+        <%= button_to t("programs.show.duplicate"), duplicate_program_week_path(week),
+              method: :post, class: "btn btn-quiet btn-sm" %>
+        <%= button_to t("programs.show.remove"), program_week_path(week), method: :delete,
+              class: "btn btn-quiet btn-sm",
+              form: { data: { turbo_confirm: t("programs.show.remove_week_warn") } } %>
+      </div>
+    <% else %>
+      <div class="flex-1">
+        <div class="display text-[15px]"><%= week.display_name %></div>
+        <div class="cue"><%= week.focus %></div>
+      </div>
+    <% end %>
+  </div>
+
+  <ul>
+    <%= render partial: "day", collection: week.program_days.order(:position),
+               locals: { editable: editable } %>
+  </ul>
+
+  <% if editable %>
+    <div class="border-t border-line p-2 pl-4">
+      <%= button_to t("programs.show.add_day"), program_week_program_days_path(week),
+            method: :post, class: "btn btn-quiet btn-sm tap" %>
+    </div>
+  <% end %>
+</section>

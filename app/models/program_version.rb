@@ -17,7 +17,34 @@ class ProgramVersion < ApplicationRecord
   before_validation :assign_version_number, on: :create
 
   def publish!
-    update!(status: "published", published_at: Time.current)
+    raise ActiveRecord::RecordInvalid, self if program_weeks.empty?
+
+    transaction do
+      # Only one published version at a time -- an assignment pins a specific
+      # version, so older ones stay readable but stop being the current one.
+      program.program_versions.published.where.not(id: id).update_all(status: "archived")
+      update!(status: "published", published_at: Time.current)
+    end
+  end
+
+  def editable? = status == "draft"
+
+  # Deep copy into a fresh draft. Used both to open an existing program for
+  # editing and to fork a published version without disturbing anyone mid-plan.
+  def duplicate_as_draft!
+    transaction do
+      copy = program.program_versions.create!(
+        status: "draft",
+        duration_weeks: duration_weeks,
+        source_import_id: source_import_id
+      )
+      program_weeks.order(:position).each { |week| week.copy_into!(copy) }
+      copy
+    end
+  end
+
+  def summary
+    { weeks: program_weeks.count, days: ProgramDay.where(program_week: program_weeks).count }
   end
 
   private

@@ -12,4 +12,14 @@ class ProgramDay < ApplicationRecord
             uniqueness: { scope: :program_week_id }
 
   def display_name = name.presence || "Día #{position}"
+
+  def copy_into!(target_week)
+    copy = target_week.program_days.create!(
+      position: position, name: name, focus: focus, description: description
+    )
+    # Top-level blocks only; each block copies its own children, so nested
+    # "bloque A + bloque B" structures come across intact.
+    program_blocks.order(:position).each { |block| block.copy_into!(day: copy) }
+    copy
+  end
 end

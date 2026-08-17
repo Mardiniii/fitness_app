@@ -1,0 +1,25 @@
+<li class="border-t border-line">
+  <div class="flex items-start gap-2 py-2 pl-4">
+    <% if editable %>
+      <%= form_with model: day, url: program_day_path(day), method: :patch,
+                    class: "flex flex-1 flex-wrap items-center gap-2" do |f| %>
+        <span class="stat-k w-12 shrink-0">Día <%= day.position %></span>
+        <%= f.text_field :name, value: day.name, placeholder: day.display_name,
+              class: "field flex-1 min-w-[9rem] py-1.5 text-[13px]" %>
+        <%= f.text_field :focus, value: day.focus, placeholder: t("programs.show.day_focus"),
+              class: "field flex-1 min-w-[11rem] py-1.5 text-[13px]" %>
+        <%= f.submit t("programs.show.save"), class: "btn btn-quiet btn-sm" %>
+      <% end %>
+      <%# outside the form above: button_to renders its own <form> %>
+      <%= button_to t("programs.show.remove"), program_day_path(day), method: :delete,
+            class: "btn btn-quiet btn-sm shrink-0",
+            form: { data: { turbo_confirm: t("programs.show.remove_day_warn") } } %>
+    <% else %>
+      <span class="stat-k w-12 shrink-0">Día <%= day.position %></span>
+      <div class="flex-1">
+        <div class="text-[13.5px] font-bold"><%= day.display_name %></div>
+        <div class="cue"><%= day.focus %></div>
+      </div>
+    <% end %>
+  </div>
+</li>

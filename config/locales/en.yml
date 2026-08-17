@@ -24,6 +24,7 @@ en:
 
     attributes:
       user:
+        remember_me: Remember me
         email: Email
         name: Name
         role: Role
@@ -110,6 +111,7 @@ en:
       completed: Completed
       skipped: Skipped
   nav:
+    programs: Programs
     library: Library
     sign_out: Sign out
   dashboard:
@@ -127,6 +129,58 @@ en:
     no_program: You have no assigned program yet.
   errors:
     practitioners_only: This section is for practitioners only.
+  programs:
+    locked: This version is already published. Open a new draft to edit it.
+    index:
+      title: Programs
+      subtitle: Training plans you build for your clients.
+      new: New program
+      empty: No programs yet.
+      draft: "Draft v%{n}"
+      published: "Published v%{n}"
+    new:
+      title: New program
+    edit:
+      title: Edit program
+    form:
+      name_placeholder: "e.g. Hypertrophy / Fat loss"
+      goal_placeholder: "e.g. Build muscle"
+      save: Save
+      cancel: Cancel
+    show:
+      draft_badge: "Draft v%{n}"
+      published_badge: "Published v%{n}"
+      rename: Edit details
+      publish: Publish
+      publish_warn: "Publish this version? It becomes available to assign to clients."
+      new_draft: New draft
+      start_draft: Start draft
+      read_only: This version is published and cannot be edited. Open a new draft to make changes.
+      no_version: This program has no content yet.
+      no_weeks: No weeks yet. Add the first one.
+      add_week: Add week
+      add_day: Add day
+      duplicate: Duplicate
+      remove: Remove
+      save: Save
+      week_focus: "Week focus"
+      day_focus: "e.g. LEGS (QUAD FOCUS)"
+      remove_week_warn: "Remove this week and all its days?"
+      remove_day_warn: "Remove this day?"
+    create:
+      created: "%{name} created."
+    update:
+      updated: Program updated.
+    destroy:
+      discarded: "%{name} archived."
+    open_draft:
+      draft_opened: Draft opened.
+  program_versions:
+    publish:
+      published: "Version %{n} published."
+      empty: You cannot publish a version with no weeks.
+    fork:
+      forked: "Draft v%{n} created from the published version."
   exercises:
     video:
       title: Reference video

@@ -1,0 +1,53 @@
+<% content_for :title, @program.name %>
+<% editable = @version&.editable? %>
+
+<div class="flex flex-wrap items-start justify-between gap-3">
+  <div class="min-w-0">
+    <h1 class="display text-[28px]"><%= @program.name %></h1>
+    <p class="cue mt-1"><%= @program.goal %></p>
+    <div class="mt-2 flex flex-wrap gap-2">
+      <% if @draft %>
+        <span class="stat-k text-now"><%= t(".draft_badge", n: @draft.version_number) %></span>
+      <% end %>
+      <% if @published %>
+        <span class="stat-k text-done"><%= t(".published_badge", n: @published.version_number) %></span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-2">
+    <%= link_to t(".rename"), edit_program_path(@program), class: "btn btn-quiet btn-sm tap" %>
+    <% if @draft %>
+      <%= button_to t(".publish"), publish_program_version_path(@draft), method: :patch,
+            class: "btn btn-now btn-sm tap",
+            form: { data: { turbo_confirm: t(".publish_warn") } } %>
+    <% elsif @published %>
+      <%= button_to t(".new_draft"), fork_program_version_path(@published), method: :post,
+            class: "btn btn-ink btn-sm tap" %>
+    <% else %>
+      <%= button_to t(".start_draft"), open_draft_program_path(@program), method: :post,
+            class: "btn btn-ink btn-sm tap" %>
+    <% end %>
+  </div>
+</div>
+
+<% if @version.nil? %>
+  <p class="cue mt-8"><%= t(".no_version") %></p>
+<% else %>
+  <% unless editable %>
+    <p class="flash flash-notice mt-5"><%= t(".read_only") %></p>
+  <% end %>
+
+  <% if @weeks.any? %>
+    <%= render partial: "week", collection: @weeks, locals: { editable: editable } %>
+  <% else %>
+    <p class="cue mt-6"><%= t(".no_weeks") %></p>
+  <% end %>
+
+  <% if editable %>
+    <div class="mt-4">
+      <%= button_to t(".add_week"), program_version_program_weeks_path(@version),
+            method: :post, class: "btn btn-ink btn-sm tap" %>
+    </div>
+  <% end %>
+<% end %>

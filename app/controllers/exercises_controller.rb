@@ -1,5 +1,6 @@
 class ExercisesController < ApplicationController
-  before_action :require_practitioner!
+  include PractitionerOnly
+
   before_action :set_exercise, only: %i[edit update destroy restore confirm]
 
   FILTER_KEYS = %i[q region structure quality purpose confirmed discarded].freeze
@@ -114,9 +115,5 @@ class ExercisesController < ApplicationController
       :default_equipment_item_id, :technique_notes, :reference_url,
       :taxonomy_confirmed
     )
-  end
-
-  def require_practitioner!
-    redirect_to root_path, alert: t("errors.practitioners_only") unless current_user.practitioner?
   end
 end
