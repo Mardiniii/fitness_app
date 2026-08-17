@@ -1,0 +1,69 @@
+<section class="<%= block.nested? ? "border-l-2 border-line ml-4" : "card mt-4" %>">
+  <div class="flex flex-wrap items-center gap-2 border-b-2 border-line p-3">
+    <% if editable %>
+      <%= form_with model: block, url: program_block_path(block), method: :patch,
+                    class: "flex flex-1 flex-wrap items-center gap-2" do |f| %>
+        <%= f.text_field :name, value: block.name,
+              class: "field w-32 py-1.5 text-[13px] font-extrabold uppercase" %>
+        <%= f.text_field :focus, value: block.focus, placeholder: t("program_days.show.block_focus"),
+              class: "field w-40 py-1.5 text-[13px]" %>
+        <%= f.select :execution_mode,
+              ProgramBlock.execution_modes.keys.map { |v| [ enum_label("execution_mode", v), v ] },
+              {}, class: "field w-44 py-1.5 text-[13px]" %>
+        <%= f.number_field :round_count, value: block.round_count, min: 1, max: 20,
+              class: "field w-20 py-1.5 text-[13px]", title: t("program_days.show.rounds") %>
+        <% if block.interval? %>
+          <%= f.number_field :work_seconds, value: block.work_seconds, min: 1,
+                placeholder: t("program_days.show.work"), class: "field w-20 py-1.5 text-[13px]" %>
+          <%= f.number_field :rest_seconds, value: block.rest_seconds, min: 0,
+                placeholder: t("program_days.show.rest_label"), class: "field w-20 py-1.5 text-[13px]" %>
+        <% end %>
+        <%= f.submit t("program_days.show.save"), class: "btn btn-quiet btn-sm" %>
+      <% end %>
+      <%# button_to renders its own form -- must stay outside the one above %>
+      <div class="flex shrink-0 gap-1">
+        <% if block.execution_mode == "paired" %>
+          <%= button_to t("program_days.show.add_child"), add_child_program_block_path(block),
+                method: :post, class: "btn btn-quiet btn-sm" %>
+        <% end %>
+        <%= button_to t("program_days.show.duplicate"), duplicate_program_block_path(block),
+              method: :post, class: "btn btn-quiet btn-sm" %>
+        <%= button_to t("program_days.show.remove"), program_block_path(block), method: :delete,
+              class: "btn btn-quiet btn-sm",
+              form: { data: { turbo_confirm: t("program_days.show.remove_block_warn") } } %>
+      </div>
+    <% else %>
+      <div class="flex-1">
+        <div class="display text-[14px]"><%= block.name %></div>
+        <div class="cue">
+          <%= [ block.focus, enum_label("execution_mode", block.execution_mode),
+                block.round_count && t("program_days.show.series", n: block.round_count),
+                block.interval? && "#{block.work_seconds}\"x#{block.rest_seconds}\"" ].compact_blank.join(" · ") %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <ul>
+    <%= render partial: "block_exercise", collection: block.block_exercises.order(:position),
+               locals: { editable: editable } %>
+  </ul>
+
+  <% block.child_blocks.order(:position).each do |child| %>
+    <%= render "block", block: child, editable: editable, exercises: exercises %>
+  <% end %>
+
+  <% if editable && block.execution_mode != "paired" %>
+    <div class="border-t border-line p-2">
+      <%= form_with url: program_block_block_exercises_path(block), method: :post,
+                    class: "flex flex-wrap items-center gap-2" do %>
+        <%= select_tag :exercise_id,
+              options_from_collection_for_select(exercises, :id, :name_es),
+              class: "field flex-1 min-w-[14rem] py-1.5 text-[13px]",
+              include_blank: t("program_days.show.pick_exercise") %>
+        <%= submit_tag t("program_days.show.add_exercise"), class: "btn btn-ink btn-sm tap",
+              data: { disable_with: nil } %>
+      <% end %>
+    </div>
+  <% end %>
+</section>

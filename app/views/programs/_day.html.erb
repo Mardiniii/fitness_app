@@ -13,6 +13,8 @@
               class: "field flex-1 min-w-[13rem] py-1.5 text-[13px]" %>
         <%= f.submit t("programs.show.save"), class: "btn btn-quiet btn-sm" %>
       <% end %>
+      <%= link_to t("programs.show.edit_blocks"), program_day_path(day),
+            class: "btn btn-ink btn-sm shrink-0" %>
       <%# outside the form above: button_to renders its own <form> %>
       <%= button_to t("programs.show.remove"), program_day_path(day), method: :delete,
             class: "btn btn-quiet btn-sm shrink-0",
@@ -20,7 +22,8 @@
     <% else %>
       <span class="stat-k w-12 shrink-0">Día <%= day.position %></span>
       <div class="flex-1">
-        <div class="text-[13.5px] font-bold"><%= day.display_name %></div>
+        <%= link_to day.display_name, program_day_path(day),
+              class: "text-[13.5px] font-bold hover:text-now" %>
         <div class="cue"><%= day.focus %></div>
       </div>
     <% end %>

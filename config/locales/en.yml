@@ -94,6 +94,7 @@ en:
       circuit: Circuit
       interval: Interval
       paired: Paired blocks
+      biseries: Bi-sets
     measure_kind:
       reps: Reps
       time: Time
@@ -129,6 +130,25 @@ en:
     no_program: You have no assigned program yet.
   errors:
     practitioners_only: This section is for practitioners only.
+  program_days:
+    show:
+      back: Back to program
+      no_blocks: No blocks in this day yet.
+      add_block: Add block
+      add_child: Add sub-block
+      add_exercise: Add
+      pick_exercise: Choose exercise…
+      duplicate: Duplicate
+      remove: Remove
+      save: Save
+      block_focus: "Block focus"
+      rounds: Sets
+      work: Work
+      rest_label: Rest
+      series: "%{n} sets"
+      rest: "rest %{n}s"
+      per_side: per side
+      remove_block_warn: "Remove this block and all its exercises?"
   programs:
     locked: This version is already published. Open a new draft to edit it.
     index:
@@ -163,6 +183,7 @@ en:
       duplicate: Duplicate
       remove: Remove
       save: Save
+      edit_blocks: Blocks
       week_focus: "Week focus"
       day_focus: "e.g. LEGS (QUAD FOCUS)"
       video_placeholder: "Session video (Drive, YouTube…)"

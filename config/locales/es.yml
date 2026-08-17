@@ -109,6 +109,7 @@ es:
       circuit: En circuito
       interval: Por tiempo
       paired: Bloques combinados
+      biseries: En biseries
     measure_kind:
       reps: Repeticiones
       time: Tiempo
@@ -144,6 +145,25 @@ es:
     no_program: No tienes un programa asignado todavía.
   errors:
     practitioners_only: Esta sección es solo para profesionales.
+  program_days:
+    show:
+      back: Volver al programa
+      no_blocks: Aún no hay bloques en este día.
+      add_block: Añadir bloque
+      add_child: Añadir sub-bloque
+      add_exercise: Añadir
+      pick_exercise: Elegir ejercicio…
+      duplicate: Duplicar
+      remove: Quitar
+      save: Guardar
+      block_focus: "Enfoque del bloque"
+      rounds: Series
+      work: Trabajo
+      rest_label: Descanso
+      series: "%{n} series"
+      rest: "descanso %{n}s"
+      per_side: por lado
+      remove_block_warn: "¿Quitar este bloque y todos sus ejercicios?"
   programs:
     locked: Esta versión ya está publicada. Crea un borrador nuevo para editarla.
     index:
@@ -178,6 +198,7 @@ es:
       duplicate: Duplicar
       remove: Quitar
       save: Guardar
+      edit_blocks: Bloques
       week_focus: "Enfoque de la semana"
       day_focus: "Ej: PIERNA (ENFOQUE CUÁDRICEPS)"
       video_placeholder: "Video de la sesión (Drive, YouTube…)"

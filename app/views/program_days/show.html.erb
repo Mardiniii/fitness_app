@@ -1,0 +1,48 @@
+<% content_for :title, "#{@day.display_name} · #{@program.name}" %>
+<% editable = @version.editable? %>
+<% exercises = Exercise.kept.order(:muscle_region, :name_es) %>
+
+<div class="flex flex-wrap items-start justify-between gap-3">
+  <div class="min-w-0">
+    <nav class="u-label text-ink-soft">
+      <%= link_to @program.name, @program, class: "hover:text-now" %>
+      <span class="text-ink-faint">/</span>
+      <%= @week.display_name %>
+    </nav>
+    <h1 class="display mt-1 text-[26px]"><%= @day.display_name %></h1>
+    <p class="cue"><%= @day.focus %></p>
+    <% if @day.description.present? %>
+      <p class="cue mt-1"><%= @day.description %></p>
+    <% end %>
+  </div>
+
+  <div class="flex flex-wrap gap-2">
+    <%= link_to t(".back"), @program, class: "btn btn-quiet btn-sm tap" %>
+  </div>
+</div>
+
+<% unless editable %>
+  <p class="flash flash-notice mt-5"><%= t("programs.show.read_only") %></p>
+<% end %>
+
+<% if @day.video? %>
+  <div class="mt-5 max-w-sm">
+    <div class="u-label mb-2 text-ink-soft"><%= t("exercises.video.title") %></div>
+    <%= render "shared/video", video: @day.video, title: @day.display_name %>
+  </div>
+<% end %>
+
+<% if @blocks.any? %>
+  <% @blocks.each do |block| %>
+    <%= render "block", block: block, editable: editable, exercises: exercises %>
+  <% end %>
+<% else %>
+  <p class="cue mt-6"><%= t(".no_blocks") %></p>
+<% end %>
+
+<% if editable %>
+  <div class="mt-4">
+    <%= button_to t(".add_block"), program_day_program_blocks_path(@day),
+          method: :post, class: "btn btn-ink btn-sm tap" %>
+  </div>
+<% end %>

@@ -30,6 +30,9 @@ module HtmlStructure
   end
 end
 
+# Any element that renders a <form>: button_to and form_with/form_for alike.
+# The first version of this guard only knew about button_to, which missed the
+# form-inside-form case entirely.
 RSpec::Matchers.define :have_no_nested_forms do
   match do |html|
     @offsets = HtmlStructure.nested_forms(html)

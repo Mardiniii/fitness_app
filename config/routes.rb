@@ -18,7 +18,18 @@ Rails.application.routes.draw do
     resources :program_days, only: [ :create ]
   end
 
-  resources :program_days, only: [ :update, :destroy ]
+  resources :program_days, only: [ :update, :destroy, :show ] do
+    resources :program_blocks, only: [ :create ]
+  end
+
+  resources :program_blocks, only: [ :update, :destroy ] do
+    member { post :duplicate; post :add_child }
+    resources :block_exercises, only: [ :create ]
+  end
+
+  resources :block_exercises, only: [ :update, :destroy ] do
+    member { post :move }
+  end
 
   resources :exercises, except: [ :show ] do
     member     { patch :confirm; patch :restore }
