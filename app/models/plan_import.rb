@@ -3,7 +3,10 @@
 # from when it looks wrong six months later.
 class PlanImport < ApplicationRecord
   pg_enum :source_type, %w[paste pdf], prefix: :source, validate: true
-  pg_enum :status, %w[pending parsed review committed failed], validate: true
+  # prefix is mandatory here: the value "committed" would otherwise generate
+  # committed!, which ActiveRecord::Transactions already defines. Same failure
+  # family as load_kind's "none" clobbering ActiveRecord::Base.none.
+  pg_enum :status, %w[pending parsed review committed failed], prefix: true, validate: true
 
   belongs_to :practitioner, class_name: "User"
   belongs_to :program_version, optional: true

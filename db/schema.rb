@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_17_190100) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_17_200100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -308,7 +308,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_190100) do
     t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "template", default: false, null: false
+    t.bigint "source_program_id"
+    t.index ["practitioner_id", "template"], name: "index_programs_on_practitioner_id_and_template"
     t.index ["practitioner_id"], name: "index_programs_on_practitioner_id"
+    t.index ["source_program_id"], name: "index_programs_on_source_program_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -404,6 +408,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_190100) do
   add_foreign_key "program_versions", "plan_imports", column: "source_import_id"
   add_foreign_key "program_versions", "programs"
   add_foreign_key "program_weeks", "program_versions"
+  add_foreign_key "programs", "programs", column: "source_program_id"
   add_foreign_key "programs", "users", column: "practitioner_id"
   add_foreign_key "sessions", "program_assignments"
   add_foreign_key "sessions", "program_days"
