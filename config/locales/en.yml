@@ -165,6 +165,8 @@ en:
       save: Save
       week_focus: "Week focus"
       day_focus: "e.g. LEGS (QUAD FOCUS)"
+      video_placeholder: "Session video (Drive, YouTube…)"
+      drive_sharing_hint: "The Drive file must be shared as \"anyone with the link\", otherwise the client sees a sign-in screen."
       remove_week_warn: "Remove this week and all its days?"
       remove_day_warn: "Remove this day?"
     create:
@@ -222,6 +224,7 @@ en:
       not_applicable: Not applicable
       technique_placeholder: "e.g. Control the descent"
       technique_hint: Shown to the client at the moment they perform the set.
+      video_hint: "Explains the movement. Accepts Drive, YouTube or Vimeo. Drive files must be shared as \"anyone with the link\"."
       save: Save
       cancel: Cancel
       danger_zone: Danger zone

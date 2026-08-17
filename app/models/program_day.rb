@@ -13,10 +13,19 @@ class ProgramDay < ApplicationRecord
 
   def display_name = name.presence || "Día #{position}"
 
+  # A walkthrough of the whole session. Distinct from Exercise#video, which
+  # explains a single movement.
+  def video  = VideoLink.wrap(reference_url)
+  def video? = reference_url.present?
+
+  # Columns that belong to a specific row rather than to its content. Copying
+  # works by "everything except these", so a new column is carried across by
+  # default instead of being silently dropped -- which is exactly how
+  # reference_url went missing the first time.
+  COPY_EXCLUDED = %w[id program_week_id created_at updated_at].freeze
+
   def copy_into!(target_week)
-    copy = target_week.program_days.create!(
-      position: position, name: name, focus: focus, description: description
-    )
+    copy = target_week.program_days.create!(attributes.except(*COPY_EXCLUDED))
     # Top-level blocks only; each block copies its own children, so nested
     # "bloque A + bloque B" structures come across intact.
     program_blocks.order(:position).each { |block| block.copy_into!(day: copy) }

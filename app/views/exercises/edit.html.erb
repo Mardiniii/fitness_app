@@ -10,7 +10,7 @@
 <% if @exercise.video? %>
   <div class="mt-6 max-w-md">
     <div class="u-label mb-2 text-ink-soft"><%= t("exercises.video.title") %></div>
-    <%= render "video", exercise: @exercise %>
+    <%= render "shared/video", video: @exercise.video, title: @exercise.name_es %>
   </div>
 <% end %>
 

@@ -47,6 +47,12 @@ gem "thruster", require: false
 # gem "image_processing", "~> 1.2"
 
 group :development, :test do
+  # Test framework. Chosen over Minitest for the request/system spec ergonomics
+  # this app leans on -- most of the risk here is in rendered markup and
+  # controller authorization, not in isolated unit logic.
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 

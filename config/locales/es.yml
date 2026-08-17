@@ -180,6 +180,8 @@ es:
       save: Guardar
       week_focus: "Enfoque de la semana"
       day_focus: "Ej: PIERNA (ENFOQUE CUÁDRICEPS)"
+      video_placeholder: "Video de la sesión (Drive, YouTube…)"
+      drive_sharing_hint: "El archivo de Drive debe estar compartido como «cualquier persona con el enlace», si no el cliente verá una pantalla de inicio de sesión."
       remove_week_warn: "¿Quitar esta semana y todos sus días?"
       remove_day_warn: "¿Quitar este día?"
     create:
@@ -237,6 +239,7 @@ es:
       not_applicable: No aplica
       technique_placeholder: "Ej: Controla la bajada"
       technique_hint: Se muestra al cliente en el momento de ejecutar la serie.
+      video_hint: "Explica el movimiento. Acepta Drive, YouTube o Vimeo. Los de Drive deben estar compartidos como «cualquier persona con el enlace»."
       save: Guardar
       cancel: Cancelar
       danger_zone: Zona de riesgo

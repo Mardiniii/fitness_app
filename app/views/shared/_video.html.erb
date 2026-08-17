@@ -1,13 +1,13 @@
-<%# Renders a video reference. Embeddable providers get a click-to-load player;
-    anything else gets an honest link-out card. %>
-<% video = exercise.video %>
+<%# Renders any VideoLink. Embeddable providers get a click-to-load player;
+    anything else gets an honest link-out card.
+    Locals: video (VideoLink), title (String) %>
 <% if video %>
   <div class="rounded-brand border-2 border-line">
     <% if video.embeddable? %>
       <div class="relative aspect-video overflow-hidden rounded-t-[2px] bg-ink"
            data-controller="video"
            data-video-src-value="<%= video.embed_url %>"
-           data-video-title="<%= exercise.name_es %>">
+           data-video-title="<%= title %>">
         <div data-video-target="frame" class="absolute inset-0"></div>
 
         <button type="button" data-action="video#play" data-video-target="poster"

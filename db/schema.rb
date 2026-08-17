@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_08_17_180200) do
+ActiveRecord::Schema[8.0].define(version: 2026_08_17_190100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -270,6 +270,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_08_17_180200) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "reference_url"
     t.index ["program_week_id", "position"], name: "index_program_days_on_program_week_id_and_position", unique: true
     t.index ["program_week_id"], name: "index_program_days_on_program_week_id"
   end

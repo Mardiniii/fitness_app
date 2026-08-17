@@ -8,6 +8,9 @@
               class: "field flex-1 min-w-[9rem] py-1.5 text-[13px]" %>
         <%= f.text_field :focus, value: day.focus, placeholder: t("programs.show.day_focus"),
               class: "field flex-1 min-w-[11rem] py-1.5 text-[13px]" %>
+        <%= f.url_field :reference_url, value: day.reference_url,
+              placeholder: t("programs.show.video_placeholder"),
+              class: "field flex-1 min-w-[13rem] py-1.5 text-[13px]" %>
         <%= f.submit t("programs.show.save"), class: "btn btn-quiet btn-sm" %>
       <% end %>
       <%# outside the form above: button_to renders its own <form> %>
@@ -22,4 +25,13 @@
       </div>
     <% end %>
   </div>
+
+  <% if day.video? %>
+    <div class="max-w-sm pb-3 pl-4">
+      <%= render "shared/video", video: day.video, title: day.display_name %>
+      <% if day.video.sharing_caveat? %>
+        <p class="cue mt-1"><%= t("programs.show.drive_sharing_hint") %></p>
+      <% end %>
+    </div>
+  <% end %>
 </li>

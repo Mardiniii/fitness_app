@@ -55,5 +55,5 @@ class ProgramDaysController < ApplicationController
     false
   end
 
-  def day_params = params.require(:program_day).permit(:name, :focus, :description)
+  def day_params = params.require(:program_day).permit(:name, :focus, :description, :reference_url)
 end
