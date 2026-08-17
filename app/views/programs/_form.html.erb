@@ -21,6 +21,14 @@
     <%= f.text_area :description, rows: 3, class: "field" %>
   </div>
 
+  <label class="flex items-start gap-2 rounded-brand border-2 border-line p-3">
+    <%= f.check_box :template, class: "mt-0.5 size-4 rounded-[3px] border-2 border-ink text-now focus:ring-0" %>
+    <span>
+      <span class="text-[13.5px] font-bold"><%= t(".template") %></span>
+      <span class="cue block"><%= t(".template_hint") %></span>
+    </span>
+  </label>
+
   <div class="flex gap-3">
     <%= f.submit t(".save"), class: "btn btn-now tap" %>
     <%= link_to t(".cancel"), programs_path, class: "btn btn-quiet tap" %>

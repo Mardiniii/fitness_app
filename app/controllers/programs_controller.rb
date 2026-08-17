@@ -15,6 +15,10 @@ class ProgramsController < ApplicationController
     @published = @program.published_version
     @version   = @draft || @published
     @weeks     = @version ? @version.program_weeks.includes(:program_days).order(:position) : []
+
+    @assignments = ProgramAssignment.where(program_version: @program.program_versions)
+                                    .includes(:client, :program_version).order(starts_on: :desc)
+    @assignable_clients = current_user.clients.kept.order(:name)
   end
 
   def new
@@ -60,6 +64,6 @@ class ProgramsController < ApplicationController
   end
 
   def program_params
-    params.require(:program).permit(:name, :goal, :description)
+    params.require(:program).permit(:name, :goal, :description, :template)
   end
 end

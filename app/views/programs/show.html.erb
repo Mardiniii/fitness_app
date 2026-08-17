@@ -31,6 +31,58 @@
   </div>
 </div>
 
+<%# ---- assignment ---- %>
+<section class="card mt-6 p-4">
+  <div class="flex flex-wrap items-baseline justify-between gap-2">
+    <h2 class="u-label text-ink-soft"><%= t(".assignments") %></h2>
+    <% if @program.template? %>
+      <span class="stat-k text-done"><%= t(".is_template") %></span>
+    <% end %>
+  </div>
+
+  <% if @assignments.any? %>
+    <ul class="mt-3 divide-y divide-line">
+      <% @assignments.each do |assignment| %>
+        <li class="flex flex-wrap items-center justify-between gap-3 py-2">
+          <div>
+            <div class="text-[13.5px] font-bold"><%= assignment.client.display_name %></div>
+            <div class="cue">
+              <%= t(".assigned_meta", version: assignment.program_version.version_number,
+                    date: l(assignment.starts_on, format: :long)) %>
+              · <%= assignment.status %>
+            </div>
+          </div>
+          <%= button_to t(".unassign"), program_assignment_path(assignment), method: :delete,
+                class: "btn btn-quiet btn-sm",
+                form: { data: { turbo_confirm: t(".unassign_warn") } } %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <% if @published %>
+    <%= form_with url: program_program_assignments_path(@program), method: :post,
+                  class: "mt-3 flex flex-wrap items-end gap-2" do %>
+      <div class="min-w-[12rem] flex-1">
+        <label class="field-label"><%= t(".client") %></label>
+        <%= select_tag :client_id,
+              options_from_collection_for_select(@assignable_clients, :id, :display_name),
+              include_blank: t(".pick_client"), class: "field py-1.5 text-[13px]" %>
+      </div>
+      <div>
+        <label class="field-label"><%= t(".starts_on") %></label>
+        <%= date_field_tag :starts_on, Date.current, class: "field py-1.5 text-[13px]" %>
+      </div>
+      <%= submit_tag t(".assign"), class: "btn btn-now btn-sm tap" %>
+    <% end %>
+    <% if @program.template? %>
+      <p class="cue mt-2"><%= t(".template_assign_hint") %></p>
+    <% end %>
+  <% else %>
+    <p class="cue mt-3"><%= t(".publish_first") %></p>
+  <% end %>
+</section>
+
 <% if @version.nil? %>
   <p class="cue mt-8"><%= t(".no_version") %></p>
 <% else %>

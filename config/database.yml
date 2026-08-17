@@ -79,20 +79,9 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  primary: &primary_production
-    <<: *default
-    database: fitfusion_production
-    username: fitfusion
-    password: <%= ENV["FITFUSION_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: fitfusion_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: fitfusion_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: fitfusion_production_cable
-    migrations_paths: db/cable_migrate
+  # Heroku provisions a single database and exposes it as DATABASE_URL, which
+  # Rails merges over this entry automatically. The generated four-database
+  # layout (primary/cache/queue/cable) assumes infrastructure we do not have
+  # yet; see config/environments/production.rb for the matching adapter change.
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>

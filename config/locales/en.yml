@@ -168,6 +168,12 @@ en:
       remove: Remove
     update:
       saved: "Prescription for %{name} saved."
+  program_assignments:
+    create:
+      assigned: "Assigned to %{client} (v%{version})."
+      not_published: Publish a version before assigning it.
+    destroy:
+      removed: Assignment removed.
   program_days:
     show:
       back: Back to program
@@ -206,7 +212,20 @@ en:
       goal_placeholder: "e.g. Build muscle"
       save: Save
       cancel: Cancel
+      template: This is a template
+      template_hint: "Templates are copied on assignment, so you reuse the structure and tune loads per client."
     show:
+      assignments: Assignments
+      is_template: Template
+      assigned_meta: "v%{version} · from %{date}"
+      unassign: Remove
+      unassign_warn: "Remove this assignment? Its session history goes too."
+      client: Client
+      pick_client: Choose client…
+      starts_on: Starts
+      assign: Assign
+      publish_first: Publish a version before assigning it to a client.
+      template_assign_hint: "Assigning a template creates a copy for that client, so you can adjust their loads without affecting anyone else."
       draft_badge: "Draft v%{n}"
       published_badge: "Published v%{n}"
       rename: Edit details

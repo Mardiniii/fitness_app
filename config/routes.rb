@@ -6,7 +6,10 @@ Rails.application.routes.draw do
 
   resources :programs do
     member { post :open_draft }
+    resources :program_assignments, only: [ :create ], path: "assignments"
   end
+
+  resources :program_assignments, only: [ :update, :destroy ], path: "assignments"
 
   resources :program_versions, only: [] do
     member { patch :publish; post :fork }

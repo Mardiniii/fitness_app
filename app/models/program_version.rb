@@ -31,10 +31,14 @@ class ProgramVersion < ApplicationRecord
 
   # Deep copy into a fresh draft. Used both to open an existing program for
   # editing and to fork a published version without disturbing anyone mid-plan.
-  def duplicate_as_draft!
+  def duplicate_as_draft! = copy_to_program!(program, status: "draft")
+
+  # Deep copy into any program, not just this one -- which is what makes
+  # template assignment possible without a second copy implementation.
+  def copy_to_program!(target, status: "draft")
     transaction do
-      copy = program.program_versions.create!(
-        status: "draft",
+      copy = target.program_versions.create!(
+        status: status,
         duration_weeks: duration_weeks,
         source_import_id: source_import_id
       )

@@ -183,6 +183,12 @@ es:
       remove: Quitar
     update:
       saved: "Prescripción de %{name} guardada."
+  program_assignments:
+    create:
+      assigned: "Asignado a %{client} (v%{version})."
+      not_published: Publica una versión antes de asignarla.
+    destroy:
+      removed: Asignación eliminada.
   program_days:
     show:
       back: Volver al programa
@@ -221,7 +227,20 @@ es:
       goal_placeholder: "Ej: Ganar masa muscular"
       save: Guardar
       cancel: Cancelar
+      template: Es una plantilla
+      template_hint: "Las plantillas se copian al asignarlas, para reutilizar la estructura y ajustar las cargas por cliente."
     show:
+      assignments: Asignaciones
+      is_template: Plantilla
+      assigned_meta: "v%{version} · desde %{date}"
+      unassign: Quitar
+      unassign_warn: "¿Quitar esta asignación? Se borra también el historial de sesiones."
+      client: Cliente
+      pick_client: Elegir cliente…
+      starts_on: Empieza
+      assign: Asignar
+      publish_first: Publica una versión antes de asignarla a un cliente.
+      template_assign_hint: "Al asignar una plantilla se crea una copia para ese cliente, para que puedas ajustar sus cargas sin afectar a los demás."
       draft_badge: "Borrador v%{n}"
       published_badge: "Publicada v%{n}"
       rename: Editar datos
