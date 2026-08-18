@@ -29,7 +29,12 @@ RSpec.describe "Client detail (practitioner)", type: :request do
   # shape the seeds produce -- an assignment, logged sessions, check-ins,
   # injuries and equipment -- because that is what actually failed in the app.
   context "with a full history, the way the seeds build it" do
-    let(:assignment) { create(:program_assignment, client: client, practitioner: practitioner) }
+    let(:program)    { create(:program, practitioner: practitioner) }
+    let(:version)    { create(:program_version, program: program) }
+    let(:assignment) do
+      create(:program_assignment, client: client, practitioner: practitioner,
+                                  program_version: version)
+    end
     let(:week)       { create(:program_week, program_version: assignment.program_version) }
     let(:day)        { create(:program_day, program_week: week, position: 1) }
     let(:block)      { create(:program_block, program_day: day) }
@@ -60,6 +65,20 @@ RSpec.describe "Client detail (practitioner)", type: :request do
     it "shows the program the client is actually on" do
       get client_path(client)
 
+      expect(response.body).to include(assignment.program.name)
+    end
+
+    it "opens the assigned program from the client page" do
+      get client_path(client)
+
+      program_link = Nokogiri::HTML(response.body).at_css(
+        "a[href='#{program_path(assignment.program)}']"
+      )
+      expect(program_link).to be_present
+
+      get program_link["href"]
+
+      expect(response).to have_http_status(:ok)
       expect(response.body).to include(assignment.program.name)
     end
   end

@@ -49,7 +49,7 @@ FactoryBot.define do
   factory :program_assignment do
     program_version
     association :client, factory: :client
-    association :practitioner, factory: :practitioner
+    practitioner { program_version.program.practitioner }
     starts_on { Date.current }
   end
 end
