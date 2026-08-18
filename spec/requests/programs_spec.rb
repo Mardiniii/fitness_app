@@ -52,6 +52,19 @@ RSpec.describe "Programs", type: :request do
   context "as a practitioner" do
     before { sign_in_as(practitioner) }
 
+    it "renders an assigned program in the practitioner's Spanish locale" do
+      program = create(:program, practitioner: practitioner)
+      version = create(:program_version, program: program, status: "published")
+      create(:program_assignment, program_version: version,
+                                  practitioner: practitioner,
+                                  starts_on: Date.new(2026, 7, 7))
+
+      get program_path(program)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("07/07/2026")
+    end
+
     it "creates a program and opens a draft immediately" do
       expect { post programs_path, params: { program: { name: "Hipertrofia" } } }
         .to change(Program, :count).by(1)

@@ -1,4 +1,8 @@
 en:
+  date:
+    formats:
+      long: "%m/%d/%Y"
+
   activerecord:
     models:
       user: { one: User, other: Users }
@@ -447,4 +451,3 @@ en:
       archived: "%{name} archived (in use in %{count} places)."
     confirm_all:
       confirmed: "%{count} exercises confirmed."
-
