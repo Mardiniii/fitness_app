@@ -45,6 +45,8 @@ class SessionsController < ApplicationController
   end
 
   def complete
+    return redirect_to(@session, status: :see_other) if @session.status == "completed"
+
     @session.complete!
     redirect_to @session, notice: t(".done"), status: :see_other
   end

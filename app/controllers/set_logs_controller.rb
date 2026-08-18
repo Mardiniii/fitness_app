@@ -2,6 +2,7 @@ class SetLogsController < ApplicationController
   include ClientOnly
 
   before_action :set_session
+  before_action :ensure_open!, only: :create
 
   # Idempotent by natural key (session + block exercise + set + segment), so a
   # retried request after a dropped connection updates rather than duplicating.
@@ -34,6 +35,15 @@ class SetLogsController < ApplicationController
 
   def set_session
     @session = owned_sessions.find(params[:session_id])
+  end
+
+  # Once a session is finished it stops being editable. Hiding the form in the
+  # view is presentation, not a rule -- a replayed offline queue or a stale tab
+  # would still POST here.
+  def ensure_open!
+    return unless @session.status == "completed"
+
+    redirect_to session_path(@session), alert: t("sessions.locked"), status: :see_other
   end
 
   # Auto-advance: finishing the last set of an exercise lands the client on the
@@ -83,8 +93,11 @@ class SetLogsController < ApplicationController
       completed_at: Time.current
     )
 
-    @session.start!
+    # Validate the log before starting the session. A new log is already
+    # attached to @session.set_logs, so saving the session first also validates
+    # that log and raises RecordInvalid instead of reaching the error redirect.
     log.save
+    @session.start! if log.persisted? && log.errors.empty?
     log
   end
 

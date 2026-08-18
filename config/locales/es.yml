@@ -127,6 +127,7 @@ es:
       completed: Completada
       skipped: Omitida
   sessions:
+    locked: Esa sesión ya está terminada, sus series no se pueden cambiar.
     create:
       no_program: Todavía no tienes un programa activo.
       no_day: No queda ningún día por hacer en este programa.
@@ -145,6 +146,7 @@ es:
       skip_rest: Saltar
       complete: Terminar sesión
       complete_warn: "¿Terminar esta sesión? Puedes seguir editando las series después."
+      locked_hint: Las sesiones terminadas son solo de lectura. Tus números quedan tal como los registraste.
       completed_at: "Completada %{at}"
       queued_html: "%{count} series esperando enviarse. Suben solas cuando vuelva la conexión."
     block:
@@ -158,6 +160,8 @@ es:
       no_sets: Sin series prescritas para este ejercicio.
     set:
       serie_of: "Serie %{n} de %{total}"
+      logged: Registrado
+      not_logged: Sin registrar
       serie_n: "Serie %{n}"
       drop: Drop
       last_time: La vez pasada
@@ -170,6 +174,63 @@ es:
     create:
       invalid: No se pudo guardar esa serie.
       conflict: Esa serie se guardó desde otro dispositivo. Recarga para verla.
+  charts:
+    no_data: Todavía no hay datos suficientes.
+    trend: Tendencia
+    sessions: Sesiones por semana
+  check_ins:
+    index:
+      title: Reportes
+      subtitle: Peso, cómo te sientes y cómo dormiste. Una vez por semana.
+      new: Nuevo reporte
+      edit: Editar
+      empty: Todavía no hay reportes.
+    new:
+      title: Reporte semanal
+      subtitle: Cuatro campos, menos de treinta segundos.
+    edit:
+      title: Editar reporte
+    form:
+      week_hint: Un reporte por semana. La fecha es el lunes de esa semana.
+      notes_placeholder: "Cómo estuvo la semana, qué molestó, qué se sintió fuerte…"
+      save: Guardar
+      cancel: Cancelar
+    create:
+      saved: Reporte guardado.
+    update:
+      saved: Reporte actualizado.
+    destroy:
+      removed: Reporte eliminado.
+  progress:
+    title: Progreso
+    subtitle: Hecho con lo que registraste de verdad, no con lo que estaba prescrito.
+    by_exercise: Por ejercicio
+    best_now: Más pesado ahora
+    first_seen: Cuando empezaste
+    sessions: Sesiones
+    sessions_per_week: Sesiones por semana
+    sessions_total: "%{count} sesiones en este periodo"
+    check_in_trends: Tendencias de los reportes
+    no_lifts: Todavía no hay series registradas con carga.
+    no_check_ins: No hay reportes en este periodo.
+    empty: Registra una sesión o un reporte y esta página se llena.
+    back_home: Volver al inicio
+  clients:
+    show:
+      back: Volver
+      age: "%{n} años"
+      program: Programa actual
+      version: "v%{n}"
+      since: "desde %{date}"
+      open_program: Abrir programa
+      no_program: Sin programa activo.
+      constraints: Restricciones
+      injuries: Lesiones
+      no_injuries: Ninguna registrada.
+      equipment: Equipo
+      no_equipment: Nada registrado.
+      recent_sessions: Sesiones recientes
+      no_sessions: Todavía no hay sesiones.
   nav:
     programs: Programas
     library: Biblioteca
@@ -177,7 +238,18 @@ es:
   dashboard:
     last_check_in: Último reporte
     resume_session: Retomar sesión
+    in_progress: Sesión en curso
+    program_complete: Programa completado
+    program_complete_hint: "Terminaste las %{count} sesiones de este programa. Cristian te envía el siguiente bloque."
+    see_progress: Ver progreso
+    last_session: Última sesión
+    days_done: "%{done} de %{total} días hechos"
+    all_check_ins: Ver todos
+    no_check_ins: Todavía no hay reportes.
+    do_check_in: Reporte semanal
     start_session: Empezar sesión
+    last: Última
+    days_ago: "%{n}D"
     streak: Racha
     sessions: Sesiones
     title: Inicio
@@ -316,6 +388,9 @@ es:
       discarded: "%{name} archivado."
     open_draft:
       draft_opened: Borrador abierto.
+  program_weeks:
+    duplicate:
+      duplicated: "%{from} duplicada como %{to}."
   program_versions:
     publish:
       published: "Versión %{n} publicada."

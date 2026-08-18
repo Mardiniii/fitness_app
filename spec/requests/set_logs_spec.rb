@@ -137,7 +137,7 @@ RSpec.describe "Set logs", type: :request do
     it "records a skipped set without counting it as work done" do
       post session_set_logs_path(session), params: log_params(skipped: "1")
 
-      expect(SetLog.last.skipped).to slot(true)
+      expect(SetLog.last.skipped).to be(true)
       expect(session.reload.logged_set_count).to eq(0)
     end
 
@@ -145,10 +145,35 @@ RSpec.describe "Set logs", type: :request do
       post session_set_logs_path(session), params: log_params(rpe_reported: 42)
 
       expect(SetLog.count).to eq(0)
-      expect(response).to be_redirect
+      expect(response).to(be_redirect, lambda {
+        "expected a redirect, got #{response.status}:\n#{response.body[0, 1200]}"
+      })
 
       follow_redirect!
       expect(response.body).to include("flash-alert")
+    end
+
+    # Hiding the form is presentation. A replayed offline queue or a stale tab
+    # would still POST here, so the rule lives in the controller.
+    context "when the session is already completed" do
+      before { session.update!(status: "completed", completed_at: Time.current) }
+
+      it "refuses to write a new set" do
+        expect { post session_set_logs_path(session), params: log_params }
+          .not_to change(SetLog, :count)
+
+        expect(response).to redirect_to(session_path(session))
+        expect(flash[:alert]).to be_present
+      end
+
+      it "refuses to change a set that was already logged" do
+        log = create(:set_log, session: session, block_exercise: slot,
+                               exercise: slot.exercise, set_number: 1, reps_completed: 10)
+
+        post session_set_logs_path(session), params: log_params(reps_completed: 99)
+
+        expect(log.reload.reps_completed).to eq(10)
+      end
     end
 
     it "refuses an exercise from a different day" do

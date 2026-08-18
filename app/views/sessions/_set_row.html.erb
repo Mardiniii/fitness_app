@@ -12,6 +12,7 @@
   # Bodyweight work has no load to type and, in these plans, no prescribed RPE.
   # Written as literal class names because Tailwind scans source text and would
   # never see an interpolated grid-cols-#{n}.
+  locked    = @session.status == "completed"
   logs_load = ps.logs_load?
   logs_rpe  = ps.logs_rpe?
   grid_cols = { 1 => "grid-cols-1", 2 => "grid-cols-2", 3 => "grid-cols-3" }
@@ -43,6 +44,15 @@
     <% end %>
   </div>
 
+  <% if locked %>
+    <%# Read-only: the session is closed, so this is history. %>
+    <div class="mt-2 card-quiet p-3">
+      <div class="u-label text-ink-soft"><%= t("sessions.set.logged") %></div>
+      <div class="mt-0.5 text-[16px] font-extrabold tnum">
+        <%= log&.summary.presence || t("sessions.set.not_logged") %>
+      </div>
+    </div>
+  <% else %>
   <%= form_with url: session_set_logs_path(@session), method: :post,
         data: { action: "submit->offline-queue#submit" },
         class: "mt-2" do %>
@@ -119,5 +129,6 @@
         <%= t("sessions.set.skip") %>
       </button>
     </div>
+  <% end %>
   <% end %>
 </div>

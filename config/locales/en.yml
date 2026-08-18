@@ -112,6 +112,7 @@ en:
       completed: Completed
       skipped: Skipped
   sessions:
+    locked: That session is finished, so its sets can no longer be changed.
     create:
       no_program: You have no active program yet.
       no_day: There is no next day left in this program.
@@ -130,6 +131,7 @@ en:
       skip_rest: Skip
       complete: Finish session
       complete_warn: "Finish this session? You can still edit the sets afterwards."
+      locked_hint: Finished sessions are read-only. Your numbers stay exactly as you logged them.
       completed_at: "Completed %{at}"
       queued_html: "%{count} sets waiting to be sent. They will go up on their own when the connection comes back."
     block:
@@ -143,6 +145,8 @@ en:
       no_sets: No sets prescribed for this exercise.
     set:
       serie_of: "Set %{n} of %{total}"
+      logged: Logged
+      not_logged: Not logged
       serie_n: "Set %{n}"
       drop: Drop
       last_time: Last time
@@ -155,6 +159,63 @@ en:
     create:
       invalid: That set could not be saved.
       conflict: That set was saved from another device. Reload to see it.
+  charts:
+    no_data: Not enough data yet.
+    trend: Trend
+    sessions: Sessions per week
+  check_ins:
+    index:
+      title: Check-ins
+      subtitle: Bodyweight, how you feel, and how you slept. Once a week.
+      new: New check-in
+      edit: Edit
+      empty: No check-ins yet.
+    new:
+      title: Weekly check-in
+      subtitle: Four fields, under thirty seconds.
+    edit:
+      title: Edit check-in
+    form:
+      week_hint: One check-in per week. The date is the Monday of that week.
+      notes_placeholder: "How the week went, anything that hurt, anything that felt strong…"
+      save: Save
+      cancel: Cancel
+    create:
+      saved: Check-in saved.
+    update:
+      saved: Check-in updated.
+    destroy:
+      removed: Check-in removed.
+  progress:
+    title: Progress
+    subtitle: Built from what you actually logged, not from what was prescribed.
+    by_exercise: By exercise
+    best_now: Heaviest now
+    first_seen: When you started
+    sessions: Sessions
+    sessions_per_week: Sessions per week
+    sessions_total: "%{count} sessions in this period"
+    check_in_trends: Check-in trends
+    no_lifts: No logged sets with a load yet.
+    no_check_ins: No check-ins in this period.
+    empty: Log a session or a check-in and this page fills up.
+    back_home: Back home
+  clients:
+    show:
+      back: Back
+      age: "%{n} years"
+      program: Current program
+      version: "v%{n}"
+      since: "from %{date}"
+      open_program: Open program
+      no_program: No active program.
+      constraints: Constraints
+      injuries: Injuries
+      no_injuries: None recorded.
+      equipment: Equipment
+      no_equipment: Nothing recorded.
+      recent_sessions: Recent sessions
+      no_sessions: No sessions yet.
   nav:
     programs: Programs
     library: Library
@@ -162,7 +223,18 @@ en:
   dashboard:
     last_check_in: Last check-in
     resume_session: Resume session
+    in_progress: Session in progress
+    program_complete: Program complete
+    program_complete_hint: "You finished all %{count} sessions in this program. Cristian will send the next block."
+    see_progress: See progress
+    last_session: Last session
+    days_done: "%{done} of %{total} days done"
+    all_check_ins: See all
+    no_check_ins: No check-ins yet.
+    do_check_in: Weekly check-in
     start_session: Start session
+    last: Last
+    days_ago: "%{n}d"
     streak: Streak
     sessions: Sessions
     title: Home
@@ -301,6 +373,9 @@ en:
       discarded: "%{name} archived."
     open_draft:
       draft_opened: Draft opened.
+  program_weeks:
+    duplicate:
+      duplicated: "%{from} duplicated as %{to}."
   program_versions:
     publish:
       published: "Version %{n} published."

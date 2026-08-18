@@ -7,22 +7,41 @@
 
     <section class="card p-5">
       <h2 class="u-label text-ink-soft"><%= t("dashboard.clients") %></h2>
-      <% if @clients.any? %>
-        <ul class="mt-4 space-y-4">
-          <% @clients.each do |client| %>
+      <% if @roster.any? %>
+        <ul class="mt-4 space-y-5">
+          <% @roster.each do |row| %>
             <li>
-              <div class="text-[15.5px] font-extrabold uppercase tracking-[-0.02em]">
-                <%= client.display_name %>
+              <%= link_to client_path(row.client),
+                    class: "text-[15.5px] font-extrabold uppercase tracking-[-0.02em] hover:text-now" do %>
+                <%= row.client.display_name %>
+              <% end %>
+              <div class="u-meta">
+                <%= [ row.client.client_profile&.goal, row.program&.name ].compact_blank.join(" · ") %>
               </div>
-              <div class="u-meta"><%= client.client_profile&.goal %></div>
+
+              <%# Green is what got done. Ten segments, so the bar reads as a
+                  proportion rather than as a count of anything in particular. %>
+              <div class="bar mt-2">
+                <% 10.times do |i| %>
+                  <span class="bar-seg <%= "bar-seg-filled" if (i + 1) * 10 <= row.completion_pct %>"></span>
+                <% end %>
+              </div>
+
               <div class="mt-2 flex gap-6">
                 <div>
                   <div class="stat-k"><%= t("dashboard.sessions") %></div>
-                  <div class="stat-v">0/0</div>
+                  <div class="stat-v"><%= row.sessions_done %>/<%= row.sessions_total %></div>
                 </div>
                 <div>
                   <div class="stat-k"><%= t("dashboard.streak") %></div>
-                  <div class="stat-v stat-v-done">0</div>
+                  <div class="stat-v stat-v-done"><%= row.streak %></div>
+                </div>
+                <div>
+                  <div class="stat-k"><%= t("dashboard.last") %></div>
+                  <%# Orange means this one needs attention, not that it is bad. %>
+                  <div class="stat-v <%= "stat-v-now" if row.stale? %>">
+                    <%= row.days_since_last ? t("dashboard.days_ago", n: row.days_since_last) : "—" %>
+                  </div>
                 </div>
               </div>
             </li>
@@ -52,40 +71,97 @@
   </div>
 <% else %>
   <section class="card mt-7 p-5">
-    <% if @next_day %>
+    <% if @open_session %>
+      <h2 class="u-label text-ink-soft"><%= t("dashboard.in_progress") %></h2>
+      <p class="display mt-2 text-[22px]"><%= @open_session.program_day.display_name %></p>
+      <p class="cue"><%= @open_session.program_day.focus %></p>
+      <div class="mt-4">
+        <%= link_to t("dashboard.resume_session"), @open_session,
+              class: "btn btn-now tap w-full" %>
+      </div>
+
+    <% elsif @next_day %>
       <h2 class="u-label text-ink-soft"><%= t("dashboard.next_session") %></h2>
       <p class="display mt-2 text-[22px]"><%= @next_day.display_name %></p>
       <p class="cue"><%= @next_day.focus %></p>
-      <% if @open_session %>
-        <div class="mt-4">
-          <%= link_to t("dashboard.resume_session"), @open_session,
-                class: "btn btn-now tap w-full" %>
-        </div>
-      <% else %>
-        <div class="mt-4">
-          <%= button_to t("dashboard.start_session"), sessions_path,
-                params: { program_day_id: @next_day.id },
-                class: "btn btn-now tap w-full" %>
-        </div>
-      <% end %>
+      <div class="mt-4">
+        <%= button_to t("dashboard.start_session"), sessions_path,
+              params: { program_day_id: @next_day.id },
+              class: "btn btn-now tap w-full" %>
+      </div>
+
+    <% elsif @program_complete %>
+      <%# Every day in the assigned version has a completed session. Offering
+          "Empezar sesión" here would start a day that does not exist. %>
+      <h2 class="u-label text-done"><%= t("dashboard.program_complete") %></h2>
+      <p class="display mt-2 text-[22px]"><%= @assignment.program.name %></p>
+      <p class="cue"><%= t("dashboard.program_complete_hint", count: @done_count) %></p>
+      <div class="mt-4 flex flex-col gap-2">
+        <%= link_to t("dashboard.see_progress"), progress_path, class: "btn btn-done tap w-full" %>
+        <% if @last_session %>
+          <%= link_to t("dashboard.last_session"), @last_session, class: "btn btn-quiet tap w-full" %>
+        <% end %>
+      </div>
+
     <% else %>
       <p class="cue"><%= t("dashboard.no_program") %></p>
     <% end %>
   </section>
 
-  <% if @latest_check_in %>
-    <section class="panel-done mt-4">
-      <div class="u-label text-done"><%= t("dashboard.last_check_in") %></div>
-      <div class="mt-1 flex gap-6">
-        <div>
-          <div class="stat-k"><%= t("activerecord.attributes.check_in.bodyweight_kg") %></div>
-          <div class="stat-v"><%= @latest_check_in.bodyweight_kg %></div>
-        </div>
-        <div>
-          <div class="stat-k"><%= t("activerecord.attributes.check_in.feeling") %></div>
-          <div class="stat-v"><%= @latest_check_in.feeling %>/10</div>
-        </div>
+  <% if @assignment && @day_count.to_i.positive? %>
+    <section class="mt-4">
+      <div class="flex items-baseline justify-between">
+        <span class="u-label text-ink-soft">
+          <%= t("dashboard.days_done", done: @done_count, total: @day_count) %>
+        </span>
+        <span class="u-label text-done tnum">
+          <%= (@done_count * 100 / @day_count) %>%
+        </span>
+      </div>
+      <div class="bar mt-2">
+        <% @day_count.times do |i| %>
+          <span class="bar-seg <%= "bar-seg-filled" if i < @done_count %>"></span>
+        <% end %>
       </div>
     </section>
   <% end %>
+
+  <section class="card mt-4 p-5">
+    <div class="flex items-baseline justify-between gap-3">
+      <h2 class="u-label text-ink-soft"><%= t("dashboard.last_check_in") %></h2>
+      <%= link_to t("dashboard.all_check_ins"), check_ins_path,
+            class: "u-label text-ink-soft underline decoration-2 underline-offset-4 hover:text-now" %>
+    </div>
+
+    <% if @latest_check_in %>
+      <div class="mt-3 flex flex-wrap gap-6">
+        <div>
+          <div class="stat-k"><%= t("activerecord.attributes.check_in.bodyweight_kg") %></div>
+          <div class="stat-v"><%= @latest_check_in.bodyweight_kg || "—" %></div>
+        </div>
+        <div>
+          <div class="stat-k"><%= t("activerecord.attributes.check_in.feeling") %></div>
+          <div class="stat-v"><%= @latest_check_in.feeling ? "#{@latest_check_in.feeling}/10" : "—" %></div>
+        </div>
+        <div>
+          <div class="stat-k"><%= t("activerecord.attributes.check_in.sleep_hours_avg") %></div>
+          <div class="stat-v"><%= @latest_check_in.sleep_hours_avg || "—" %></div>
+        </div>
+      </div>
+    <% else %>
+      <p class="cue mt-2"><%= t("dashboard.no_check_ins") %></p>
+    <% end %>
+
+    <% if @check_in_due %>
+      <div class="mt-4">
+        <%= link_to t("dashboard.do_check_in"), new_check_in_path,
+              class: "btn btn-quiet btn-sm tap w-full" %>
+      </div>
+    <% end %>
+  </section>
+
+  <div class="mt-4">
+    <%= link_to t("dashboard.see_progress"), progress_path,
+          class: "btn btn-ink tap w-full" %>
+  </div>
 <% end %>

@@ -1,0 +1,4 @@
+<% content_for :title, t("check_ins.edit.title") %>
+<h1 class="display text-[30px]"><%= t("check_ins.edit.title") %></h1>
+<p class="cue mt-1"><%= l(@check_in.week_of, format: "%d/%m/%Y") %></p>
+<%= render "form", check_in: @check_in %>

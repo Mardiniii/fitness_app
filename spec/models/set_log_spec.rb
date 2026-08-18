@@ -15,7 +15,7 @@ RSpec.describe SetLog do
       log = described_class.new(session: session, block_exercise: slot, exercise: slot.exercise,
                                 set_number: 1, segment_number: 1, reps_completed: 10)
 
-      expect(log.save).to slot(true), -> { log.errors.full_messages.to_sentence }
+      expect(log.save).to be(true), -> { log.errors.full_messages.to_sentence }
       expect(log.client_uuid).to be_present
     end
 

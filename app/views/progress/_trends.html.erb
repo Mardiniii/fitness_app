@@ -1,0 +1,44 @@
+<%# Per-exercise load over time. Locals: trends %>
+<% if trends.any? %>
+  <ul class="mt-4 space-y-3">
+    <% trends.each do |trend| %>
+      <li class="card p-4">
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <span class="text-[15.5px] font-extrabold uppercase tracking-[-0.02em]">
+            <%= trend.exercise.name_es %>
+          </span>
+          <%= change_badge(trend.change_pct) %>
+        </div>
+
+        <div class="mt-2 flex flex-wrap items-baseline gap-4 tnum">
+          <div>
+            <div class="stat-k"><%= t("progress.best_now") %></div>
+            <div class="stat-v">
+              <%= trend.last_point.best_load ? "#{number_with_precision(trend.last_point.best_load, precision: 1, strip_insignificant_zeros: true)} #{trend.unit}" : "—" %>
+            </div>
+          </div>
+          <div>
+            <div class="stat-k"><%= t("progress.first_seen") %></div>
+            <div class="stat-v">
+              <%= trend.first_point.best_load ? "#{number_with_precision(trend.first_point.best_load, precision: 1, strip_insignificant_zeros: true)} #{trend.unit}" : "—" %>
+            </div>
+          </div>
+          <div>
+            <div class="stat-k"><%= t("progress.sessions") %></div>
+            <div class="stat-v"><%= trend.sessions %></div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <%= sparkline(trend.points.map(&:best_load),
+                label: trend.exercise.name_es,
+                unit: trend.unit,
+                x_labels: [ l(trend.first_point.on, format: "%d/%m"),
+                            l(trend.last_point.on,  format: "%d/%m") ]) %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="cue mt-3"><%= t("progress.no_lifts") %></p>
+<% end %>

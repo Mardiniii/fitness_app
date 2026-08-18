@@ -150,25 +150,61 @@ DAYS.each do |d|
   end
 end
 
+# Weeks 2-4: the same structure, progressively heavier.
+#
+# Honest about what this is -- SEMANA 1 above is transcribed from the real
+# document; these three are generated from it by bumping the load. The later
+# SEMANA PDFs exist and will replace this when the import lands. Until then a
+# single week gives the progress screens nothing to draw, and a product whose
+# whole claim is "am I lifting more than six weeks ago" has to be able to show
+# six weeks on a fresh install.
+PROGRESSION = { 2 => 1.05, 3 => 1.10, 4 => 1.15 }.freeze
+
+PROGRESSION.each do |position, factor|
+  later = version.program_weeks.create!(position: position, name: "SEMANA #{position}")
+  week.program_days.order(:position).each { |day| day.copy_into!(later) }
+
+  # update_columns rather than update!: these rows are already valid, and the
+  # measure-kind check constraint has nothing to say about a load change.
+  PrescribedSet.joins(block_exercise: { program_block: :program_day })
+               .where(program_days: { program_week_id: later.id })
+               .where.not(load_value: nil)
+               .find_each do |prescribed|
+    prescribed.update_columns(
+      load_value: (prescribed.load_value * factor).round(1),
+      load_value_max: prescribed.load_value_max && (prescribed.load_value_max * factor).round(1)
+    )
+  end
+end
+
 # Publish and assign once. Re-running refreshes the draft but never touches an
 # existing published version, because an assignment pins one and a client's
 # logged sessions hang off it.
-client = User.find_by(email: ENV.fetch("SEED_CLIENT_EMAIL", "sebastian@fitfusion.local"))
+# Everybody gets the same block, starting on a different date -- which is what
+# actually happens: Cristian writes one plan and rolls clients onto it as they
+# come in. The roster is only interesting because they are at different points.
+assignees = [
+  [ ENV.fetch("SEED_CLIENT_EMAIL",  "sebastian@fitfusion.local"), Date.new(2026, 7, 7) ],
+  [ ENV.fetch("SEED_CLIENT2_EMAIL", "estefania@fitfusion.local"), Date.new(2026, 7, 14) ],
+  [ ENV.fetch("SEED_CLIENT3_EMAIL", "katherine@fitfusion.local"), Date.new(2026, 7, 21) ]
+].filter_map { |email, starts_on| [ User.find_by(email: email), starts_on ] if User.exists?(email: email) }
 
-if program.published_version.nil? && client
+if program.published_version.nil? && assignees.any?
   version.publish!
-  assignment = program.assign_to!(client: client, starts_on: Date.new(2026, 7, 7))
-  state = "publicada v#{assignment.program_version.version_number} y asignada a #{client.name}"
-elsif client
+  assignees.each { |user, starts_on| program.assign_to!(client: user, starts_on: starts_on) }
+  state = "publicada v#{program.published_version.version_number} y asignada a " \
+          "#{assignees.map { |u, _| u.name }.join(', ')}"
+elsif assignees.any?
   state = "ya publicada y asignada; borrador actualizado"
 else
-  state = "sin cliente para asignar"
+  state = "sin clientes para asignar"
 end
 
-sets = PrescribedSet.joins(block_exercise: { program_block: :program_day })
-                    .where(program_days: { program_week_id: week.id })
-puts "  sample program: #{program.name} (SEMANA 1, inicio 07/07/2026)"
-puts "    #{week.program_days.count} días · " \
-     "#{ProgramBlock.where(program_day: week.program_days).count} bloques · " \
+all_days = ProgramDay.where(program_week: version.program_weeks)
+sets = PrescribedSet.joins(block_exercise: :program_block)
+                    .where(program_blocks: { program_day_id: all_days.select(:id) })
+puts "  sample program: #{program.name} (4 semanas, inicio 07/07/2026)"
+puts "    #{version.program_weeks.count} semanas · #{all_days.count} días · " \
+     "#{ProgramBlock.where(program_day: all_days).count} bloques · " \
      "#{sets.count} series prescritas · #{sets.where('segment_number > 1').count} segmento(s) de drop set"
 puts "    #{state}"

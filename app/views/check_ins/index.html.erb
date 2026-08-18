@@ -1,0 +1,54 @@
+<% content_for :title, t("check_ins.index.title") %>
+
+<div class="flex flex-wrap items-baseline justify-between gap-3">
+  <div>
+    <h1 class="display text-[30px]"><%= t("check_ins.index.title") %></h1>
+    <p class="cue mt-1"><%= t("check_ins.index.subtitle") %></p>
+  </div>
+  <%= link_to t("check_ins.index.new"), new_check_in_path, class: "btn btn-now btn-sm tap" %>
+</div>
+
+<% if @check_ins.any? %>
+  <%# Newest first in the list, but the trend line reads left to right in time. %>
+  <section class="card mt-6 p-5">
+    <h2 class="u-label text-ink-soft"><%= t("activerecord.attributes.check_in.bodyweight_kg") %></h2>
+    <%= sparkline(@check_ins.reverse.map(&:bodyweight_kg),
+          label: t("activerecord.attributes.check_in.bodyweight_kg"),
+          unit: "kg", neutral: true,
+          x_labels: [ l(@check_ins.last.week_of,  format: "%d/%m"),
+                      l(@check_ins.first.week_of, format: "%d/%m") ]) %>
+  </section>
+
+  <ul class="mt-4 space-y-2">
+    <% @check_ins.each do |check_in| %>
+      <li class="card p-4">
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <span class="u-label"><%= l(check_in.week_of, format: "%d/%m/%Y") %></span>
+          <%= link_to t("check_ins.index.edit"), edit_check_in_path(check_in),
+                class: "u-label text-ink-soft underline decoration-2 underline-offset-4 hover:text-now" %>
+        </div>
+
+        <div class="mt-3 flex flex-wrap gap-6">
+          <div>
+            <div class="stat-k"><%= t("activerecord.attributes.check_in.bodyweight_kg") %></div>
+            <div class="stat-v"><%= check_in.bodyweight_kg || "—" %></div>
+          </div>
+          <div>
+            <div class="stat-k"><%= t("activerecord.attributes.check_in.feeling") %></div>
+            <div class="stat-v"><%= check_in.feeling ? "#{check_in.feeling}/10" : "—" %></div>
+          </div>
+          <div>
+            <div class="stat-k"><%= t("activerecord.attributes.check_in.sleep_hours_avg") %></div>
+            <div class="stat-v"><%= check_in.sleep_hours_avg || "—" %></div>
+          </div>
+        </div>
+
+        <% if check_in.notes.present? %>
+          <p class="cue mt-3"><%= check_in.notes %></p>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="cue mt-6"><%= t("check_ins.index.empty") %></p>
+<% end %>

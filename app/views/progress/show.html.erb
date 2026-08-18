@@ -1,0 +1,16 @@
+<% content_for :title, t("progress.title") %>
+
+<h1 class="display text-[30px]"><%= t("progress.title") %></h1>
+<p class="cue mt-1"><%= t("progress.subtitle") %></p>
+
+<% if @report.any_data? %>
+  <%= render "progress/summary", history: @history, check_ins: @check_ins %>
+
+  <h2 class="u-label mt-8 text-ink-soft"><%= t("progress.by_exercise") %></h2>
+  <%= render "progress/trends", trends: @trends %>
+<% else %>
+  <p class="cue mt-6"><%= t("progress.empty") %></p>
+  <div class="mt-4">
+    <%= link_to t("progress.back_home"), root_path, class: "btn btn-quiet tap" %>
+  </div>
+<% end %>

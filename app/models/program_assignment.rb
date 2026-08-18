@@ -19,8 +19,13 @@ class ProgramAssignment < ApplicationRecord
 
   # Day N unlocks when N-1 completes: the plans are "Dia 1..4", not
   # weekday-anchored, so the client self-schedules.
+  # pluck, not select. select returns Session records carrying one column, so
+  # `completed_day_ids.exclude?(day.id)` compared a Session to an Integer and
+  # was always true -- meaning this returned Día 1 forever, no matter how many
+  # sessions had been finished. The dashboard kept offering a day the client
+  # had already done, and the program could never report itself complete.
   def next_program_day
-    completed_day_ids = sessions.where(status: "completed").select(:program_day_id)
+    completed_day_ids = sessions.where(status: "completed").pluck(:program_day_id)
     program_version.program_weeks.order(:position)
                    .flat_map { |week| week.program_days.order(:position) }
                    .find { |day| completed_day_ids.exclude?(day.id) }

@@ -151,6 +151,27 @@
            focus:border-now focus:outline-none;
   }
 
+  /* ---------- charts ----------
+     Axes are recessive on purpose: hairline gridlines and faint ticks, so the
+     line or the bars stay the loudest thing in the box. The ticks are HTML
+     rather than SVG <text> because the plot scales to its card and scaled type
+     would drift off the system. */
+  .chart      { @apply mt-2; }
+  .chart-plot { @apply relative border-y border-line; }
+  .chart-dot  {
+    @apply absolute right-0 block size-[7px] rounded-full;
+    transform: translate(50%, -50%);
+  }
+  .chart-tick {
+    @apply whitespace-nowrap text-[9.5px] font-extrabold uppercase tracking-[0.06em]
+           text-ink-faint tabular-nums leading-none;
+  }
+  /* The one number on the progress card you should be able to read across the
+     room: is this lift going up or not. */
+  .change-badge {
+    @apply text-[22px] font-extrabold tracking-[-0.03em] tabular-nums leading-none;
+  }
+
   /* ---------- stats ---------- */
   .stat-k { @apply text-[9.5px] font-extrabold uppercase tracking-[0.1em] text-ink-soft; }
   .stat-v { @apply text-[21px] font-extrabold tracking-[-0.03em] tabular-nums; }

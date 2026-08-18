@@ -91,9 +91,12 @@
 
   <div class="mt-8 border-t-2 border-ink pt-5">
     <% if @session.status == "completed" %>
-      <p class="panel-done u-label text-done">
-        <%= t(".completed_at", at: l(@session.completed_at, format: "%d/%m · %H:%M")) %>
-      </p>
+      <div class="panel-done">
+        <p class="u-label text-done">
+          <%= t(".completed_at", at: l(@session.completed_at, format: "%d/%m · %H:%M")) %>
+        </p>
+        <p class="cue mt-1"><%= t(".locked_hint") %></p>
+      </div>
     <% else %>
       <%= button_to t(".complete"), complete_session_path(@session), method: :patch,
             class: "btn btn-ink tap w-full",

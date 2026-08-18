@@ -1,0 +1,79 @@
+<% content_for :title, @client.display_name %>
+
+<div class="flex flex-wrap items-baseline justify-between gap-3">
+  <div>
+    <h1 class="display text-[30px]"><%= @client.display_name %></h1>
+    <p class="cue mt-1">
+      <%= [ @profile&.goal,
+            (@profile&.age && t("clients.show.age", n: @profile.age)),
+            (@profile&.height_cm && "#{@profile.height_cm} cm") ].compact_blank.join(" · ") %>
+    </p>
+  </div>
+  <%= link_to t("clients.show.back"), root_path, class: "btn btn-quiet btn-sm tap" %>
+</div>
+
+<div class="mt-6 grid gap-4 sm:grid-cols-2">
+  <section class="card p-5">
+    <h2 class="u-label text-ink-soft"><%= t("clients.show.program") %></h2>
+    <% if @assignment %>
+      <p class="display mt-2 text-[20px]"><%= @assignment.program.name %></p>
+      <p class="u-meta">
+        <%= t("clients.show.version", n: @assignment.program_version.version_number) %> ·
+        <%= t("clients.show.since", date: l(@assignment.starts_on, format: "%d/%m/%Y")) %>
+      </p>
+      <div class="mt-3">
+        <%= link_to t("clients.show.open_program"), @assignment.program,
+              class: "btn btn-quiet btn-sm tap" %>
+      </div>
+    <% else %>
+      <p class="cue mt-2"><%= t("clients.show.no_program") %></p>
+    <% end %>
+  </section>
+
+  <section class="card p-5">
+    <h2 class="u-label text-ink-soft"><%= t("clients.show.constraints") %></h2>
+
+    <div class="mt-3">
+      <div class="stat-k"><%= t("clients.show.injuries") %></div>
+      <% if @injuries.any? %>
+        <ul class="mt-1 space-y-1">
+          <% @injuries.each do |injury| %>
+            <li class="text-[13.5px] font-semibold"><%= injury.name %></li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="cue"><%= t("clients.show.no_injuries") %></p>
+      <% end %>
+    </div>
+
+    <div class="mt-4">
+      <div class="stat-k"><%= t("clients.show.equipment") %></div>
+      <% if @equipment.any? %>
+        <p class="text-[13.5px] font-semibold"><%= @equipment.map(&:display_name).join(" · ") %></p>
+      <% else %>
+        <p class="cue"><%= t("clients.show.no_equipment") %></p>
+      <% end %>
+    </div>
+  </section>
+</div>
+
+<%= render "progress/summary", history: @history, check_ins: @check_ins %>
+
+<h2 class="u-label mt-8 text-ink-soft"><%= t("clients.show.recent_sessions") %></h2>
+<% if @sessions.any? %>
+  <ul class="mt-3 space-y-2">
+    <% @sessions.each do |session| %>
+      <li class="card-quiet flex flex-wrap items-baseline justify-between gap-2 p-3">
+        <span class="text-[14px] font-bold"><%= session.program_day.display_name %></span>
+        <span class="u-meta tnum">
+          <%= session.completed_at ? l(session.completed_at, format: "%d/%m · %H:%M") : t("enums.session_status.#{session.status}") %>
+        </span>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p class="cue mt-3"><%= t("clients.show.no_sessions") %></p>
+<% end %>
+
+<h2 class="u-label mt-8 text-ink-soft"><%= t("progress.by_exercise") %></h2>
+<%= render "progress/trends", trends: @trends %>

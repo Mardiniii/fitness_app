@@ -4,6 +4,17 @@ Rails.application.routes.draw do
   # Practitioner side
   resource :dashboard, only: [ :show ]
 
+  # M4 -- check-ins and progress
+  resources :check_ins, only: %i[index new create edit update destroy]
+  # controller: is mandatory here. Rails pluralizes a singleton resource to
+  # find its controller, and "progress".pluralize is "progresses" -- so this
+  # routed to a ProgressesController that does not exist. Nothing failed
+  # until somebody clicked the link.
+  resource  :progress,  only: [ :show ], controller: "progress"
+
+  # Practitioner's view of one client (P3)
+  resources :clients, only: [ :show ]
+
   # Client side -- the gym experience
   resources :sessions, only: [ :show, :create ] do
     member { patch :complete }

@@ -1,0 +1,42 @@
+<%= form_with model: check_in, class: "mt-6 space-y-4" do |f| %>
+  <% if check_in.errors.any? %>
+    <div class="flash flash-alert" role="alert">
+      <%= check_in.errors.full_messages.to_sentence %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :week_of, class: "field-label" %>
+    <%= f.date_field :week_of, class: "field tap" %>
+    <p class="cue mt-1"><%= t("check_ins.form.week_hint") %></p>
+  </div>
+
+  <div class="grid grid-cols-3 gap-2">
+    <div>
+      <%= f.label :bodyweight_kg, class: "field-label" %>
+      <%= f.number_field :bodyweight_kg, step: "0.1", min: 0, inputmode: "decimal",
+            class: "field-num tap" %>
+    </div>
+    <div>
+      <%= f.label :feeling, class: "field-label" %>
+      <%= f.number_field :feeling, min: 1, max: 10, inputmode: "numeric",
+            class: "field-num tap" %>
+    </div>
+    <div>
+      <%= f.label :sleep_hours_avg, class: "field-label" %>
+      <%= f.number_field :sleep_hours_avg, step: "0.5", min: 0, max: 24,
+            inputmode: "decimal", class: "field-num tap" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :notes, class: "field-label" %>
+    <%= f.text_area :notes, rows: 4, class: "field",
+          placeholder: t("check_ins.form.notes_placeholder") %>
+  </div>
+
+  <div class="flex gap-2">
+    <%= f.submit t("check_ins.form.save"), class: "btn btn-now tap flex-1" %>
+    <%= link_to t("check_ins.form.cancel"), check_ins_path, class: "btn btn-quiet tap" %>
+  </div>
+<% end %>

@@ -1,0 +1,37 @@
+<%# Sessions per week and check-in trends. Locals: history, check_ins %>
+<section class="card mt-4 p-5">
+  <h2 class="u-label text-ink-soft"><%= t("progress.sessions_per_week") %></h2>
+  <div class="mt-3">
+    <%= bar_chart(history.map { |h| h[:sessions] },
+          label: t("progress.sessions_per_week"),
+          x_labels: (history.any? ? [ l(history.first[:week_of], format: "%d/%m"),
+                                      l(history.last[:week_of],  format: "%d/%m") ] : nil)) %>
+  </div>
+  <p class="cue mt-2">
+    <%= t("progress.sessions_total", count: history.sum { |h| h[:sessions] }) %>
+  </p>
+</section>
+
+<section class="card mt-4 p-5">
+  <h2 class="u-label text-ink-soft"><%= t("progress.check_in_trends") %></h2>
+  <% if check_ins.any? %>
+    <div class="mt-4 grid gap-5 sm:grid-cols-3">
+      <% [ [ :bodyweight_kg, "check_in.bodyweight_kg" ],
+           [ :feeling, "check_in.feeling" ],
+           [ :sleep_hours_avg, "check_in.sleep_hours_avg" ] ].each do |attribute, key| %>
+        <div>
+          <div class="stat-k"><%= t("activerecord.attributes.#{key}") %></div>
+          <div class="stat-v"><%= check_ins.last.public_send(attribute) || "—" %></div>
+          <div class="mt-1">
+            <%= sparkline(check_ins.map { |c| c.public_send(attribute) },
+                  height: 44, label: t("activerecord.attributes.#{key}"), neutral: true,
+                  x_labels: [ l(check_ins.first.week_of, format: "%d/%m"),
+                              l(check_ins.last.week_of,  format: "%d/%m") ]) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="cue mt-2"><%= t("progress.no_check_ins") %></p>
+  <% end %>
+</section>

@@ -178,7 +178,9 @@ RSpec.describe "Sessions", type: :request do
 
         get session_path(session)
 
-        expect(response.body).to include(session_path(session, ex: 0, set: 2, anchor: "ex-#{slot.id}"))
+        # The href is HTML-escaped in the body, so & arrives as &amp;.
+        expect(response.body)
+          .to include(CGI.escapeHTML(session_path(session, ex: 0, set: 2, anchor: "ex-#{slot.id}")))
       end
 
       it "honours ?set= on the open exercise" do
@@ -247,6 +249,34 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
+  describe "a completed session" do
+    let!(:session) do
+      create(:session, program_assignment: assignment, program_day: day,
+                       status: "completed", completed_at: 1.hour.ago)
+    end
+
+    before { sign_in_as(client) }
+
+    it "renders the numbers as history rather than as forms" do
+      create(:set_log, session: session, block_exercise: slot, exercise: slot.exercise,
+                       set_number: 1, reps_completed: 8, load_value: 20, load_unit: "lb")
+
+      get session_path(session)
+
+      expect(response.body).to include(I18n.t("sessions.set.logged"))
+      expect(response.body).to include("8 × 20 lb")
+      expect(response.body).not_to include(I18n.t("sessions.set.complete"))
+      expect(response.body).not_to include("session_set_logs")
+    end
+
+    it "says it is closed instead of offering to finish it again" do
+      get session_path(session)
+
+      expect(response.body).to include(I18n.t("sessions.show.locked_hint"))
+      expect(response.body).not_to include(I18n.t("sessions.show.complete"))
+    end
+  end
+
   describe "PATCH /sessions/:id/complete" do
     let!(:session) { create(:session, program_assignment: assignment, program_day: day) }
 
@@ -258,6 +288,15 @@ RSpec.describe "Sessions", type: :request do
       expect(session.reload.status).to eq("completed")
       expect(session.completed_at).to be_present
       expect(response).to redirect_to(session)
+    end
+
+    it "is a no-op on a session that is already finished" do
+      patch complete_session_path(session)
+      first_completed_at = session.reload.completed_at
+
+      travel_to(1.hour.from_now) { patch complete_session_path(session) }
+
+      expect(session.reload.completed_at.to_i).to eq(first_completed_at.to_i)
     end
 
     it "refuses to complete a session that is not yours" do
